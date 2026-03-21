@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Berkeley+Mono&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#5c0000",
+              "tertiary": "#ffb4a8",
+              "primary": "#c0c1ff",
+              "surface-dim": "#121316",
+              "background": "#121316",
+              "on-secondary-container": "#00424e",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "error": "#ffb4ab",
+              "secondary-fixed-dim": "#4cd7f6",
+              "surface-container": "#1f1f23",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "primary-container": "#8083ff",
+              "surface-container-high": "#292a2d",
+              "outline-variant": "#464554",
+              "primary-fixed-dim": "#c0c1ff",
+              "on-primary-fixed": "#07006c",
+              "inverse-primary": "#494bd6",
+              "on-background": "#e3e2e6",
+              "surface-tint": "#c0c1ff",
+              "surface-container-low": "#1b1b1f",
+              "on-error": "#690005",
+              "surface-bright": "#38393d",
+              "on-primary-container": "#0d0096",
+              "outline": "#908fa0",
+              "on-secondary-fixed": "#001f26",
+              "surface-variant": "#343538",
+              "inverse-on-surface": "#2f3034",
+              "on-error-container": "#ffdad6",
+              "on-primary": "#1000a9",
+              "inverse-surface": "#e3e2e6",
+              "on-tertiary": "#690001",
+              "on-secondary-fixed-variant": "#004e5c",
+              "primary-fixed": "#e1e0ff",
+              "on-secondary": "#003640",
+              "on-surface-variant": "#c7c4d7",
+              "tertiary-container": "#ff5542",
+              "error-container": "#93000a",
+              "secondary-container": "#03b5d3",
+              "surface-container-highest": "#343538",
+              "tertiary-fixed": "#ffdad5",
+              "on-tertiary-fixed": "#410000",
+              "on-tertiary-fixed-variant": "#930001",
+              "secondary-fixed": "#acedff",
+              "surface": "#121316",
+              "secondary": "#4cd7f6",
+              "on-surface": "#e3e2e6",
+              "surface-container-lowest": "#0d0e11"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(31, 31, 35, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .mono-text { font-family: 'Berkeley Mono', monospace; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container/30">
+<!-- SideNavBar (Architect Mode) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-[#c0c1ff]/10 bg-[#121316] z-50 flex flex-col py-8 font-['Berkeley_Mono'] text-sm">
+<div class="px-8 mb-8">
+<span class="text-lg font-bold text-[#c0c1ff] uppercase tracking-tighter">Draplo</span>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 hover:text-slate-200 flex items-center px-6 py-3 transition-transform hover:translate-x-1 hover:bg-[#c0c1ff]/5" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="bg-[#6366F1]/10 text-[#c0c1ff] border-r-2 border-[#6366F1] flex items-center px-6 py-3" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="grid_view">grid_view</span>
+<span>Library</span>
+</a>
+<a class="text-slate-500 hover:text-slate-200 flex items-center px-6 py-3 transition-transform hover:translate-x-1 hover:bg-[#c0c1ff]/5" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="magic_button">magic_button</span>
+<span>Wizard</span>
+</a>
+<a class="text-slate-500 hover:text-slate-200 flex items-center px-6 py-3 transition-transform hover:translate-x-1 hover:bg-[#c0c1ff]/5" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="rocket_launch">rocket_launch</span>
+<span>Deployments</span>
+</a>
+<a class="text-slate-500 hover:text-slate-200 flex items-center px-6 py-3 transition-transform hover:translate-x-1 hover:bg-[#c0c1ff]/5" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-3 bg-primary-container text-on-primary-container font-bold rounded-md active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Project
+            </button>
+<div class="mt-8 pt-8 border-t border-[#c0c1ff]/10 space-y-4">
+<div class="flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xs" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 leading-none">Pro Plan</p>
+<p class="text-xs text-on-surface font-bold">Architect Mode</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-40 bg-[#121316]/80 backdrop-blur-xl border-b border-[#c0c1ff]/15 h-16 ml-64 flex justify-between items-center px-8 font-['Inter'] antialiased tracking-tight">
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Templates</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Pricing</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Docs</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">OS</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-colors px-4 py-2">Sign In</button>
+<button class="bg-[#6366F1] text-white font-bold px-5 py-2 rounded-md active:scale-95 transition-transform">Deploy Now</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-24 pb-20 px-12 min-h-screen">
+<!-- Header Section -->
+<section class="max-w-6xl mx-auto mb-12">
+<div class="flex flex-col gap-2">
+<span class="text-primary font-['Berkeley_Mono'] text-xs tracking-widest uppercase">System / Library / v4.0</span>
+<h1 class="text-5xl font-extrabold tracking-tight text-white font-headline">Template Library</h1>
+<p class="text-slate-400 text-lg max-w-2xl">25 industry-specific scaffolds. Pick one, customize it, ship it.</p>
+</div>
+</section>
+<!-- Filter Bar -->
+<section class="max-w-6xl mx-auto mb-16">
+<div class="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar">
+<button class="px-6 py-2 bg-primary-container text-on-primary-container rounded-full text-sm font-semibold whitespace-nowrap">All</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Operations</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Sales</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Content</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Platform</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Education</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Health</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Hospitality</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Analytics</button>
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface-variant hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-colors border border-outline-variant/10">Specialized</button>
+</div>
+</section>
+<!-- Template Grid -->
+<section class="max-w-6xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Start from Scratch Card -->
+<div class="group relative bg-surface-container-lowest border-2 border-dashed border-outline-variant/30 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:border-primary/50 transition-all cursor-pointer">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2">Start from Scratch</h3>
+<p class="text-slate-500 text-sm">Clean slate for custom architectural designs and complex logic.</p>
+</div>
+<!-- Template Card: Booking Platform -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-6 flex flex-col border border-outline-variant/5 group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="calendar_month">calendar_month</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary-fixed-dim text-[10px] font-bold uppercase tracking-widest rounded border border-outline-variant/20">Operations</span>
+</div>
+<h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-primary transition-colors">Booking Platform</h3>
+<p class="text-slate-400 text-sm mb-6 leading-relaxed">Scalable scheduling engine for services, rentals, or appointments with double-booking prevention.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Scheduling</span>
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Services</span>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="mono-text text-[11px] text-secondary">8 Models</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-amber-500"></div>
+<span class="mono-text text-[11px] text-amber-500">Medium</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Template Card: Patient Records -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-6 flex flex-col border border-outline-variant/5 group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary-fixed-dim text-[10px] font-bold uppercase tracking-widest rounded border border-outline-variant/20">Health</span>
+</div>
+<h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-primary transition-colors">Patient Records</h3>
+<p class="text-slate-400 text-sm mb-6 leading-relaxed">Secure EHR system with audit logs, FHIR standard compliance, and patient history visualization.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">EHR</span>
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Compliance</span>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="mono-text text-[11px] text-secondary">10 Models</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="mono-text text-[11px] text-tertiary-container">Medium-High</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Template Card: Inventory Manager -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-6 flex flex-col border border-outline-variant/5 group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary-fixed-dim text-[10px] font-bold uppercase tracking-widest rounded border border-outline-variant/20">Operations</span>
+</div>
+<h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-primary transition-colors">Inventory Manager</h3>
+<p class="text-slate-400 text-sm mb-6 leading-relaxed">Real-time stock tracking across multiple locations with low-stock alerts and SKU management.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Logistics</span>
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Retail</span>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="mono-text text-[11px] text-secondary">9 Models</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-amber-500"></div>
+<span class="mono-text text-[11px] text-amber-500">Medium</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Template Card: CRM -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-6 flex flex-col border border-outline-variant/5 group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="bolt">bolt</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary-fixed-dim text-[10px] font-bold uppercase tracking-widest rounded border border-outline-variant/20">Sales</span>
+</div>
+<h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-primary transition-colors">CRM</h3>
+<p class="text-slate-400 text-sm mb-6 leading-relaxed">Customer relationship management with pipeline tracking, interaction history, and lead scoring.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Pipeline</span>
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">SaaS</span>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="mono-text text-[11px] text-secondary">10 Models</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="mono-text text-[11px] text-tertiary-container">Medium-High</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Template Card: API-as-a-Service -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-6 flex flex-col border border-outline-variant/5 group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-primary-fixed-dim text-[10px] font-bold uppercase tracking-widest rounded border border-outline-variant/20">Specialized</span>
+</div>
+<h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-primary transition-colors">API-as-a-Service</h3>
+<p class="text-slate-400 text-sm mb-6 leading-relaxed">Infrastructure for selling API access, including key management, rate limiting, and usage billing.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Developer</span>
+<span class="px-2 py-0.5 bg-background text-slate-500 text-[10px] mono-text rounded">Backend</span>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="mono-text text-[11px] text-secondary">11 Models</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="mono-text text-[11px] text-tertiary-container">Medium-High</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="ml-64 bg-[#08090C] w-auto py-12 border-t border-[#c0c1ff]/10">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2">
+<span class="text-white font-black uppercase tracking-widest text-lg">Draplo</span>
+<p class="font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest text-slate-600">© 2026 Draplo. Built for the Laravel ecosystem.</p>
+</div>
+<nav class="flex gap-8">
+<a class="font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Privacy</a>
+<a class="font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Terms</a>
+<a class="font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Security</a>
+<a class="font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Changelog</a>
+</nav>
+</div>
+</footer>
+</body></html>

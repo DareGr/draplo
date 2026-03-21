@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Draplo | Your next SaaS, architected by AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Berkeley+Mono&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#5c0000",
+              "tertiary": "#ffb4a8",
+              "primary": "#c0c1ff",
+              "surface-dim": "#121316",
+              "background": "#121316",
+              "on-secondary-container": "#00424e",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "error": "#ffb4ab",
+              "secondary-fixed-dim": "#4cd7f6",
+              "surface-container": "#1f1f23",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "primary-container": "#8083ff",
+              "surface-container-high": "#292a2d",
+              "outline-variant": "#464554",
+              "primary-fixed-dim": "#c0c1ff",
+              "on-primary-fixed": "#07006c",
+              "inverse-primary": "#494bd6",
+              "on-background": "#e3e2e6",
+              "surface-tint": "#c0c1ff",
+              "surface-container-low": "#1b1b1f",
+              "on-error": "#690005",
+              "surface-bright": "#38393d",
+              "on-primary-container": "#0d0096",
+              "outline": "#908fa0",
+              "on-secondary-fixed": "#001f26",
+              "surface-variant": "#343538",
+              "inverse-on-surface": "#2f3034",
+              "on-error-container": "#ffdad6",
+              "on-primary": "#1000a9",
+              "inverse-surface": "#e3e2e6",
+              "on-tertiary": "#690001",
+              "on-secondary-fixed-variant": "#004e5c",
+              "primary-fixed": "#e1e0ff",
+              "on-secondary": "#003640",
+              "on-surface-variant": "#c7c4d7",
+              "tertiary-container": "#ff5542",
+              "error-container": "#93000a",
+              "secondary-container": "#03b5d3",
+              "surface-container-highest": "#343538",
+              "tertiary-fixed": "#ffdad5",
+              "on-tertiary-fixed": "#410000",
+              "on-tertiary-fixed-variant": "#930001",
+              "secondary-fixed": "#acedff",
+              "surface": "#121316",
+              "secondary": "#4cd7f6",
+              "on-surface": "#e3e2e6",
+              "surface-container-lowest": "#0d0e11"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"],
+              "mono": ["Berkeley Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        background: rgba(31, 31, 35, 0.6);
+        backdrop-filter: blur(20px);
+      }
+      .terminal-window {
+        background-color: #08090C;
+        border: 1px solid rgba(192, 193, 255, 0.15);
+      }
+      #hero-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 10;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#121316]/80 backdrop-blur-xl border-b border-[#c0c1ff]/15 shadow-[0_20px_60px_rgba(99,102,241,0.05)] font-['Inter'] antialiased tracking-tight">
+<div class="flex justify-between items-center px-8 h-16 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-white uppercase">Draplo</span>
+<div class="hidden md:flex gap-6">
+<a class="text-[#c0c1ff] font-bold border-b-2 border-[#6366F1] pb-1" href="#">Templates</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Pricing</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Docs</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">GitHub</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-colors px-4 py-2 text-sm font-medium active:scale-95 transition-transform">Sign In</button>
+<button class="bg-[#6366F1] text-white px-5 py-2 rounded-md font-bold text-sm hover:bg-white/5 active:scale-95 transition-all">Deploy Now</button>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-24 overflow-hidden">
+<div id="hero-canvas"></div>
+<div class="max-w-7xl mx-auto px-8 text-center hero-content">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-highest border border-outline-variant mb-8">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">From idea to deployed Laravel SaaS in 10 minutes</span>
+</div>
+<h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white mb-6 leading-none">
+            Your next SaaS,<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-container">architected by AI.</span>
+</h1>
+<p class="max-w-2xl mx-auto text-on-surface-variant text-lg md:text-xl mb-10 font-light">
+            Pick a template. Customize in the wizard. AI generates your Laravel scaffold — database, API, docs — optimized for Claude Code and Cursor. Deploy to your own server.
+        </p>
+<div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-16">
+<button class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-md hover:translate-y-[-2px] transition-transform">
+                Browse Templates
+            </button>
+<button class="w-full md:w-auto px-8 py-4 bg-surface-container-highest border border-outline-variant text-white font-bold rounded-md flex items-center justify-center gap-2 hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-xl">star</span>
+                View on GitHub
+            </button>
+</div>
+<!-- Stats Row -->
+<div class="flex flex-wrap justify-center gap-8 md:gap-16 font-mono text-xs uppercase tracking-[0.2em] text-outline">
+<div class="flex flex-col items-center gap-1">
+<span class="text-white font-bold text-lg">25</span>
+<span>SaaS Templates</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-white font-bold text-lg">95%</span>
+<span>Ideas Covered</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-white font-bold text-lg">3 min</span>
+<span>To Full Scaffold</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-white font-bold text-lg">$0</span>
+<span>Self-Host Forever</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tech Stack Bar -->
+<section class="w-full bg-surface-container-lowest border-y border-outline-variant/10 py-12 mb-32 overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-10">
+<div class="flex items-center gap-3 bg-[#FF2D20]/10 border border-[#FF2D20]/20 px-4 py-2 rounded-full">
+<svg class="w-5 h-5 fill-[#FF2D20]" viewbox="0 0 24 24"><path d="M12 0l-3.35 1.934a3.87 3.87 0 00-1.934 3.35v1.286l3.35-1.934V3.35L12 1.934l1.934 1.116v4.618l3.35-1.934v-1.286a3.87 3.87 0 00-1.934-3.35L12 0zm0 13.066l-3.35 1.934a3.87 3.87 0 00-1.934 3.35v1.286l3.35-1.934v-1.286L12 15.3l1.934 1.116v4.618l3.35-1.934v-1.286a3.87 3.87 0 00-1.934-3.35L12 13.066z"></path></svg>
+<span class="text-[#FF2D20] font-bold text-xs uppercase tracking-widest">Built for the Laravel ecosystem</span>
+</div>
+<div class="flex flex-wrap justify-center items-center gap-8 opacity-70 grayscale hover:grayscale-0 transition-all">
+<div class="flex items-center gap-2">
+<img alt="Laravel" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX8-XOM1h_Xltuy1ZHY4SggiKY8bOno_jf0NF6SIdI-iUgS_a6qb9ST2Gn2IibJ9l5RsNH3GucBs-Cpvh1r-v4t6qgwrzZi_F0GZC2o2gX6cOfk0Sm3YdUg47f4nlgiVZ9ljmZl2W-G0s-RbM2d9zm7riiKA7Ild0u3wAcb7n_cn-0hEaDocvL64FBnJgvgCTL0-ckps0ngMPJ6h78YQ88XMyGQ0uMaK0CfEUITxl_lqmG5_fLtgqjt8mjIZo1eUloInp371RzNAQ"/>
+<span class="font-bold text-sm tracking-tight">LARAVEL</span>
+</div>
+<div class="flex items-center gap-2">
+<img alt="Postgres" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHlOCIyYzQXiKdqrXgT8PAZSiAJYvttkob0isO5LQCcvTdq9UuheqbNXvFP2aojuPveSUCWEjfcwx6d4-dJ48mQvwRLxW57amsvtBvCarqwEU-3tQzG4Y92dktEJYgM8o4k-a9_DQUSqmDgXSrW4N8TgOQNNgfIwG0lE7eeA__dVWGpUZ9MqjQX-GRAOUIEOXdVP18AVZUJ9IwWt4_ZBJJEFUlw4qW8J0B13vwG-SOpzL5m18notwzR3h3DSvWAX_6E8xKRIV02II"/>
+<span class="font-bold text-sm tracking-tight">POSTGRES</span>
+</div>
+<div class="flex items-center gap-2">
+<img alt="React" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkcpM6pGDEfC_Bdzlk3Tls71A2SXLJyjtlqxhjq_9c9I2jm7I9mCtIyl4KR7ttYv5TdHX3LdJjxrE4Pvi73LW4DEovMA1-3R1poH8hauuBL_A_qgpc3u8FElGXOLPRlzMp5MnxGVSehMuj_-TREhkhVQ3gYgrkMN1Z83IRkV8C7TDfiQlEF_tDJNszWcP5b3xkfEIRKT7JjdafiLCAAqen4m80XZEr8uvkHIvhCGxEgPNM6rpTNnA9bKyHJAz0hJ2zb55-2-dfD4c"/>
+<span class="font-bold text-sm tracking-tight">REACT</span>
+</div>
+<div class="flex items-center gap-2">
+<img alt="Tailwind" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWX8ZvKWi2v56lDFX518sPRhPAtv1nI-m7BPHgfIDsYy1qckfKZ6K9UDRAdv8aLC5EhjVU2m4HInOW6P92bPxIbdCWQk-5pXdmR2kwUs0DM95n1nJsM47Rf7i2rdPOf1SwK_qJnJUABF8dMgRLzXF30GS-rrBHy1LEE_KoDTpJrhii-6-UpWtM68AvIv1PJGl_Olx7O2swAo-a8APAzfb1-I1VuizBnYc34YBYm-5qciLiQ2LdrUDx-gy2OVV0Y0qkVO4zMXQnrlc"/>
+<span class="font-bold text-sm tracking-tight">TAILWIND</span>
+</div>
+<div class="flex items-center gap-2">
+<img alt="Claude" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWGHVsf0YCMtWnr4L4Y9A4tUGxJegqASDm8N8hnPaxbfhgdYyrdWoywK2bdxje7mgYTITxZfXqRZVhuCViHxFMev1PBu9rjBtzp0etRWmK-L3cz1oDzaTpHkJDGXGvAseLbr9viNQS239-kDFQ5Mo1QXURLTfv-mguOO-LypD1WXS-nmV6vVliTLvFA79lBl7ypzGxOLmhHaniQq6lSObaLay_b1btOkYinKp56t1m-wdAu2bdMXM7DOhupad9h0q2F7PEMdYjFQI"/>
+<span class="font-bold text-sm tracking-tight">CLAUDE</span>
+</div>
+<div class="flex items-center gap-2">
+<img alt="Coolify" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKVzNuo0xdHFtlV6ES0mF86rC1Z5UFtGu7b4C0IFuyjyPQ_E8ZlklMgXyJHyO_J6O-hRxTvZJoFzMIRd1oV0OrqsV2AvOzyB7WD8sVbb7RBGepBSRi0-7Y_Bz92aTFAack8L_glU1rT134yiPu9mm0o1YFmOURyzWc6tTK-HxkWbzOb1_mztXj46nIX1gv8_yYCxKVJLg_y9ZHhIarskn52gsygmcXXsMR7E-TjSJO_6WbJGfR2Oo1h8pWDTJKeVvX6YJDo6a3Qvc"/>
+<span class="font-bold text-sm tracking-tight">COOLIFY</span>
+</div>
+</div>
+</div>
+</section>
+<!-- How it Works (Laravel Focused) -->
+<section class="max-w-7xl mx-auto px-8 mb-48">
+<div class="flex flex-col md:flex-row justify-between items-start gap-12">
+<div class="md:w-1/3">
+<span class="font-mono text-xs text-primary uppercase tracking-widest mb-4 block">Process</span>
+<h2 class="text-4xl font-black text-white mb-6">Laravel-first architecture by design.</h2>
+</div>
+<div class="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="group">
+<span class="font-mono text-4xl text-outline-variant mb-4 block group-hover:text-primary transition-colors">01</span>
+<h3 class="text-xl font-bold text-white mb-2">Select Laravel Blueprint</h3>
+<p class="text-on-surface-variant text-sm">Pick from 25 production-grade Laravel scaffolds. Each template includes tested migrations, models, API routes, and realistic seeders.</p>
+</div>
+<div class="group">
+<span class="font-mono text-4xl text-outline-variant mb-4 block group-hover:text-primary transition-colors">02</span>
+<h3 class="text-xl font-bold text-white mb-2">Customize</h3>
+<p class="text-on-surface-variant text-sm">Wizard pre-fills from your chosen template. Rename models, add fields, adjust roles — tailor it to your specific use case.</p>
+</div>
+<div class="group">
+<span class="font-mono text-4xl text-outline-variant mb-4 block group-hover:text-primary transition-colors">03</span>
+<h3 class="text-xl font-bold text-white mb-2">Generate Agent-Docs</h3>
+<p class="text-on-surface-variant text-sm">Get a scaffold optimized for AI agents with comprehensive .claude-reference context files.</p>
+</div>
+<div class="group">
+<span class="font-mono text-4xl text-outline-variant mb-4 block group-hover:text-primary transition-colors">04</span>
+<h3 class="text-xl font-bold text-white mb-2">BYOS Deployment</h3>
+<p class="text-on-surface-variant text-sm">Bring Your Own Server. Connect your Hetzner, DigitalOcean, Linode, or Vultr account. Draplo provisions, installs Coolify, and deploys automatically. Your server, your code, your data.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Template Showcase -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<div class="mb-12 flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-black text-white">Production Blueprints</h2>
+<p class="text-on-surface-variant mt-2">25 industry-specific scaffolds. Pick one, customize it, ship it.</p>
+</div>
+<button class="text-primary font-mono text-sm border-b border-primary/30 pb-1">View All</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">📅</span>
+<h3 class="text-lg font-bold text-white">Booking Platform</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">Availability calendars, time-slot management, and Stripe Connect for marketplaces.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Laravel</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Redis</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">12 Models · Large</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">🤝</span>
+<h3 class="text-lg font-bold text-white">CRM</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">Lead tracking, pipeline stages, and Filament-powered admin dashboard.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Filament</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Breeze</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">8 Models · Medium</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">🧾</span>
+<h3 class="text-lg font-bold text-white">Invoice &amp; Billing</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">PDF generation, recurring subscriptions, and tax calculation logic.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Cashier</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">PDF</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">10 Models · Medium</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">🛍️</span>
+<h3 class="text-lg font-bold text-white">E-commerce</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">Product variants, cart persistence, and headless inventory API.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Next.js</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Elastic</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">15 Models · Large</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">🎧</span>
+<h3 class="text-lg font-bold text-white">Helpdesk</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">Shared inbox, ticketing system, and real-time Echo integration.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Pusher</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Postgres</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">9 Models · Medium</span>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="surface-container p-6 rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="text-4xl mb-4 block">🎓</span>
+<h3 class="text-lg font-bold text-white">LMS</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-4">Course modules, quiz engine, and student progress tracking.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-2">
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">Vimeo</span>
+<span class="bg-surface-container-lowest text-[10px] font-mono px-2 py-1 rounded text-primary border border-primary/20 uppercase">S3</span>
+</div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">11 Models · Medium</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Agent-Ready Section -->
+<section class="max-w-7xl mx-auto px-8 mb-32 bg-surface-container-lowest rounded-3xl border border-outline-variant/10 overflow-hidden">
+<div class="grid md:grid-cols-2 gap-0">
+<div class="p-12 border-r border-outline-variant/10">
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded mb-4 inline-block uppercase tracking-widest">Innovation</span>
+<h2 class="text-4xl font-black text-white mb-6">Optimized for Claude Code &amp; Cursor</h2>
+<p class="text-on-surface-variant mb-8">
+    Draplo doesn't just give you code; it generates a <span class="text-white font-mono">.claude-reference/</span> folder that provides deep architectural context to your IDE's agent.
+</p>
+<div class="font-mono text-sm space-y-2 text-slate-400">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-primary">folder_open</span> .claude-reference/</div>
+<div class="flex items-center gap-2 pl-6"><span class="material-symbols-outlined text-sm text-slate-500">description</span> CLAUDE.md</div>
+<div class="flex items-center gap-2 pl-6"><span class="material-symbols-outlined text-sm text-slate-500">description</span> architecture.md</div>
+<div class="flex items-center gap-2 pl-6"><span class="material-symbols-outlined text-sm text-slate-500">description</span> constants.md</div>
+<div class="flex items-center gap-2 pl-6"><span class="material-symbols-outlined text-sm text-slate-500">description</span> patterns.md</div>
+<div class="flex items-center gap-2 pl-6"><span class="material-symbols-outlined text-sm text-slate-500">description</span> decisions.md</div>
+</div>
+</div>
+<div class="p-8 bg-[#08090C] flex flex-col justify-center gap-6">
+<div class="space-y-4">
+<div>
+<span class="text-[10px] font-mono text-slate-500 uppercase">Typical Developer Experience</span>
+<div class="terminal-window p-4 mt-2 text-[11px] opacity-60">
+<span class="text-error">User:</span> I've read CLAUDE.md and architecture.md. This is a Booking Platform with 8 models — Tenant, Service, Provider, Appointment, Client. Should I start with migrations?
+</div>
+</div>
+<div>
+<span class="text-[10px] font-mono text-primary uppercase">With Draplo + Blueprint</span>
+<div class="terminal-window p-4 mt-2 text-[11px] border-primary/30">
+<span class="text-primary">Claude Code:</span> Architecture loaded. The Appointment model has FK relations to Client, Provider, and Service. I'll generate the migration with proper foreign key constraints and indexes. Starting now.
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-black text-white">Transparent Architect Pricing</h2>
+<p class="text-on-surface-variant mt-2">Professional scaffolding without recurring fees.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Free -->
+<div class="surface-container p-8 rounded-xl border border-outline-variant/10 flex flex-col">
+<h3 class="text-xl font-bold text-white">Free</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-8">For personal tinkering.</p>
+<div class="text-4xl font-black text-white mb-8">$0<span class="text-sm font-normal text-slate-500">/forever</span></div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            1 Active Project
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            Basic Laravel Templates
+                        </li>
+<li class="flex items-center gap-3 text-sm text-slate-500">
+<span class="material-symbols-outlined text-slate-700 text-lg">cancel</span>
+                            Agent-Ready Context
+                        </li>
+</ul>
+<button class="w-full py-3 bg-surface-container-highest rounded-md font-bold hover:bg-surface-bright transition-colors">Get Started</button>
+</div>
+<!-- Pro -->
+<div class="surface-container p-8 rounded-xl border-2 border-primary relative flex flex-col">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-black uppercase px-3 py-1 rounded-full">Best Value</div>
+<h3 class="text-xl font-bold text-white">Pro</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-8">For serious SaaS builders.</p>
+<div class="text-4xl font-black text-white mb-8">$29<span class="text-sm font-normal text-slate-500">/one-time</span></div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            Unlimited Projects
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            All Premium Blueprints
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            Full Agent-Ready Context
+                        </li>
+</ul>
+<button class="w-full py-3 bg-primary text-on-primary rounded-md font-bold hover:opacity-90 transition-opacity">Go Pro</button>
+</div>
+<!-- Pro+ -->
+<div class="surface-container p-8 rounded-xl border border-outline-variant/10 flex flex-col">
+<h3 class="text-xl font-bold text-white">Pro+</h3>
+<p class="text-on-surface-variant text-sm mt-2 mb-8">Managed deployment.</p>
+<div class="text-4xl font-black text-white mb-8">$12<span class="text-sm font-normal text-slate-500">/mo</span></div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            Everything in Pro
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            BYOS Deploy Automation
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+                            Priority Support
+                        </li>
+</ul>
+<button class="w-full py-3 bg-surface-container-highest rounded-md font-bold hover:bg-surface-bright transition-colors">Subscribe</button>
+</div>
+</div>
+</section>
+<!-- OS Section -->
+<section class="max-w-7xl mx-auto px-8 mb-32 text-center">
+<div class="bg-gradient-to-b from-primary/5 to-transparent p-16 rounded-3xl border border-primary/10">
+<h2 class="text-4xl font-black text-white mb-4">Fully open source. AGPL-3.0.</h2>
+<p class="text-on-surface-variant mb-10 max-w-xl mx-auto">We believe in open tools for developers. Contribute to the engine or self-host your own Draplo instance for free.</p>
+<div class="flex items-center justify-center gap-4">
+<button class="bg-white text-black px-6 py-3 rounded-md font-bold flex items-center gap-2 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-xl">star</span>
+                        GitHub Stars 1.4k
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-[#c0c1ff]/10 bg-[#08090C] font-['Berkeley_Mono'] text-[10px] uppercase tracking-widest">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-white font-black text-sm">DRAPLO</span>
+<span class="text-slate-600">© 2026 Draplo. Built for the Laravel ecosystem.</span>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Privacy</a>
+<a class="text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Terms</a>
+<a class="text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Security</a>
+<a class="text-slate-600 hover:text-[#6366F1] transition-colors" href="#">Changelog</a>
+</div>
+</div>
+</footer>
+<script>
+    // Hero 3D Animation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const container = document.getElementById('hero-canvas');
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const boxes = [];
+    const colors = [0xc0c1ff, 0x8083ff];
+    const mouse = new THREE.Vector2();
+    const targetRotation = new THREE.Vector2();
+
+    function createWireframeBox(size, color) {
+        const geometry = new THREE.BoxGeometry(size, size, size);
+        const edges = new THREE.EdgesGeometry(geometry);
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
+            color: color, 
+            transparent: true, 
+            opacity: 0.7 
+        }));
+        
+        // Faint faces
+        const faceMaterial = new THREE.MeshBasicMaterial({ 
+            color: color, 
+            transparent: true, 
+            opacity: 0.15 
+        });
+        const mesh = new THREE.Mesh(geometry, faceMaterial);
+        line.add(mesh);
+        
+        return line;
+    }
+
+    const boxCount = 10;
+    for (let i = 0; i < boxCount; i++) {
+        const box = createWireframeBox(Math.random() * 1.5 + 1.5, colors[i % colors.length]);
+        
+        // Scatter initially
+        box.position.set(
+            (Math.random() - 0.5) * 40,
+            (Math.random() - 0.5) * 40,
+            (Math.random() - 0.5) * 20 - 10
+        );
+        
+        // Target grid position (scaffold)
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        box.userData.targetPos = new THREE.Vector3(
+            (col - 1.5) * 6,
+            (row - 0.5) * 6,
+            0
+        );
+        
+        box.userData.speedX = (Math.random() - 0.5) * 0.01;
+        box.userData.speedY = (Math.random() - 0.5) * 0.01;
+        box.userData.offset = Math.random() * Math.PI * 2;
+        
+        group.add(box);
+        boxes.push(box);
+    }
+
+    camera.position.z = 25;
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    function animate(time) {
+        requestAnimationFrame(animate);
+
+        const t = time * 0.001;
+
+        // Group rotation and parallax
+        targetRotation.y = mouse.x * 0.2;
+        targetRotation.x = -mouse.y * 0.2;
+        
+        group.rotation.y += (targetRotation.y - group.rotation.y) * 0.05 + 0.001;
+        group.rotation.x += (targetRotation.x - group.rotation.x) * 0.05;
+
+        boxes.forEach((box, index) => {
+            // Move towards target grid position
+            box.position.lerp(box.userData.targetPos, 0.02);
+            
+            // Breathing animation (sine wave on Y)
+            box.position.y += Math.sin(t + box.userData.offset) * 0.005;
+            
+            // Subtle individual rotation
+            box.rotation.x += box.userData.speedX;
+            box.rotation.y += box.userData.speedY;
+        });
+
+        renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate(0);
+</script>
+</body></html>

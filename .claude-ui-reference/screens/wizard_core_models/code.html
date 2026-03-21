@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Draplo Wizard | Core Models</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6366F1",
+                        "on-primary": "#ffffff",
+                        "background": "#0F1115",
+                        "surface": "#16191E",
+                        "surface-container": "#1E2228",
+                        "surface-container-high": "#282C34",
+                        "surface-container-highest": "#31363F",
+                        "outline": "#464C56",
+                        "outline-variant": "#343A42",
+                    },
+                    fontFamily: {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "label": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(22, 25, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .mono-text { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #343A42; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #464C56; }
+    </style>
+</head>
+<body class="bg-background text-slate-200 font-body selection:bg-primary/30 antialiased overflow-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0F1115]/90 backdrop-blur-xl border-b border-white/5 flex justify-between items-center px-8 h-16 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-white uppercase">Draplo</span>
+<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Templates</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Pricing</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Docs</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">OS</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white text-sm transition-colors active:scale-95 px-4 py-2">Sign In</button>
+<button class="bg-white text-black font-bold text-sm px-6 py-2 rounded-lg active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">Deploy Now</button>
+</div>
+</header>
+<div class="flex h-screen pt-16">
+<!-- SideNavBar -->
+<aside class="h-full w-64 fixed left-0 top-16 border-r border-white/5 bg-[#0F1115] z-40 flex flex-col py-8">
+<div class="px-6 mb-8">
+<div class="text-xl font-black tracking-tight text-white mb-1 uppercase">Draplo</div>
+<div class="text-[10px] uppercase tracking-widest text-primary font-bold">Project: DentBook</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-400 hover:text-white flex items-center px-6 py-3 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="bg-primary/10 text-primary border-r-2 border-primary flex items-center px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">magic_button</span>
+<span class="text-sm font-medium">Wizard</span>
+</a>
+<a class="text-slate-400 hover:text-white flex items-center px-6 py-3 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">grid_view</span>
+<span class="text-sm font-medium">Library</span>
+</a>
+<a class="text-slate-400 hover:text-white flex items-center px-6 py-3 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">rocket_launch</span>
+<span class="text-sm font-medium">Deployments</span>
+</a>
+<a class="text-slate-400 hover:text-white flex items-center px-6 py-3 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 space-y-4">
+<div class="bg-surface-container-high p-4 rounded-xl border border-white/5">
+<div class="text-[10px] text-primary font-black uppercase mb-2">Step 3 of 6</div>
+<div class="w-full bg-background h-1.5 rounded-full overflow-hidden mb-3">
+<div class="bg-primary h-full w-[50%]"></div>
+</div>
+<div class="text-[11px] text-slate-400 leading-tight">Defining schema for <span class="text-white font-medium">Booking Platform</span> template.</div>
+</div>
+<div class="flex flex-col gap-2 pb-4">
+<a class="text-slate-500 hover:text-white text-xs transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">menu_book</span> Documentation
+                </a>
+<a class="text-slate-500 hover:text-white text-xs transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">contact_support</span> Support
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 h-full overflow-y-auto bg-background p-12 pb-32">
+<div class="max-w-4xl mx-auto">
+<header class="mb-10">
+<div class="text-[11px] font-mono text-slate-500 uppercase tracking-[0.2em] mb-3">
+                    Template: Booking Platform → <span class="text-primary">Step 3 of 6</span>
+</div>
+<h1 class="text-4xl font-black tracking-tighter text-white flex items-center gap-4">
+                    🗃️ Core Models
+                </h1>
+</header>
+<div class="grid grid-cols-1 gap-4">
+<!-- Model 1: Tenant -->
+<div class="group surface-container glass-panel rounded-xl p-5 transition-all hover:bg-surface-container-high">
+<div class="flex items-center gap-3 mb-5">
+<span class="material-symbols-outlined text-slate-600 cursor-grab active:cursor-grabbing">drag_indicator</span>
+<h3 class="text-lg font-mono font-bold text-white tracking-tight">Tenant</h3>
+<div class="flex gap-2 ml-auto items-center">
+<span class="bg-primary/10 px-2 py-0.5 rounded text-[10px] font-bold text-primary border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">lock</span> LOCKED
+                            </span>
+<button class="text-slate-600 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">name</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">address</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">phone</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">logo</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">timezone</span>
+</div>
+<button class="border border-dashed border-white/10 px-4 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> field
+                        </button>
+</div>
+</div>
+<!-- Model 2: Service -->
+<div class="group surface-container glass-panel rounded-xl p-5 transition-all hover:bg-surface-container-high">
+<div class="flex items-center gap-3 mb-5">
+<span class="material-symbols-outlined text-slate-600 cursor-grab active:cursor-grabbing">drag_indicator</span>
+<h3 class="text-lg font-mono font-bold text-white tracking-tight">Service</h3>
+<div class="flex gap-2 ml-auto items-center">
+<button class="text-slate-600 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">name</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-primary">#</span>
+<span class="text-xs font-mono text-white">duration_minutes</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-green-400">$</span>
+<span class="text-xs font-mono text-white">price</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">description</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-yellow-400">?</span>
+<span class="text-xs font-mono text-white">active</span>
+</div>
+<button class="border border-dashed border-white/10 px-4 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> field
+                        </button>
+</div>
+</div>
+<!-- Model 3: Provider -->
+<div class="group surface-container glass-panel rounded-xl p-5 transition-all hover:bg-surface-container-high">
+<div class="flex items-center gap-3 mb-5">
+<span class="material-symbols-outlined text-slate-600 cursor-grab active:cursor-grabbing">drag_indicator</span>
+<h3 class="text-lg font-mono font-bold text-white tracking-tight">Provider</h3>
+<div class="flex gap-2 ml-auto items-center">
+<button class="text-slate-600 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">name</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">email</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">phone</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">specialization</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">working_hours</span>
+</div>
+<button class="border border-dashed border-white/10 px-4 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> field
+                        </button>
+</div>
+</div>
+<!-- Model 4: Appointment -->
+<div class="group surface-container glass-panel rounded-xl p-5 transition-all hover:bg-surface-container-high">
+<div class="flex items-center gap-3 mb-5">
+<span class="material-symbols-outlined text-slate-600 cursor-grab active:cursor-grabbing">drag_indicator</span>
+<h3 class="text-lg font-mono font-bold text-white tracking-tight">Appointment</h3>
+<div class="flex gap-2 ml-auto items-center">
+<button class="text-slate-600 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="bg-primary/20 border border-primary/30 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-primary-200">FK</span>
+<span class="text-xs font-mono text-white">client_id</span>
+</div>
+<div class="bg-primary/20 border border-primary/30 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-primary-200">FK</span>
+<span class="text-xs font-mono text-white">provider_id</span>
+</div>
+<div class="bg-primary/20 border border-primary/30 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-primary-200">FK</span>
+<span class="text-xs font-mono text-white">service_id</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-indigo-300">T</span>
+<span class="text-xs font-mono text-white">starts_at</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-[10px] font-bold text-indigo-300">T</span>
+<span class="text-xs font-mono text-white">ends_at</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">status</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">notes</span>
+</div>
+<button class="border border-dashed border-white/10 px-4 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> field
+                        </button>
+</div>
+</div>
+<!-- Model 5: Client -->
+<div class="group surface-container glass-panel rounded-xl p-5 transition-all hover:bg-surface-container-high">
+<div class="flex items-center gap-3 mb-5">
+<span class="material-symbols-outlined text-slate-600 cursor-grab active:cursor-grabbing">drag_indicator</span>
+<h3 class="text-lg font-mono font-bold text-white tracking-tight">Client</h3>
+<div class="flex gap-2 ml-auto items-center">
+<button class="text-slate-600 hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">name</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">email</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">phone</span>
+</div>
+<div class="bg-surface-container-highest border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="text-xs font-mono text-white">notes</span>
+</div>
+<button class="border border-dashed border-white/10 px-4 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> field
+                        </button>
+</div>
+</div>
+<!-- Add Model Button -->
+<button class="w-full py-8 border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-slate-500 hover:border-primary/50 hover:bg-primary/5 transition-all group">
+<span class="material-symbols-outlined text-3xl mb-1 group-hover:scale-110 transition-transform">add_box</span>
+<span class="font-mono text-[11px] uppercase tracking-widest font-bold">Add New Core Model</span>
+</button>
+</div>
+</div>
+<!-- Floating Relationships Widget -->
+<div class="fixed right-8 top-32 w-72 bg-surface-container/80 backdrop-blur-lg border border-white/10 rounded-xl p-5 shadow-2xl z-40 hidden xl:block">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-xl">account_tree</span>
+<span class="text-xs font-black uppercase tracking-widest text-white">Relationships</span>
+</div>
+<div class="space-y-4">
+<div class="text-[11px] leading-relaxed">
+<div class="text-primary font-bold mb-1">Appointment</div>
+<div class="text-slate-400">→ belongs to <span class="text-slate-200">Client, Provider, Service</span></div>
+</div>
+<div class="h-px bg-white/5"></div>
+<div class="text-[11px] leading-relaxed">
+<div class="text-primary font-bold mb-1">Tenant</div>
+<div class="text-slate-400">→ has many <span class="text-slate-200">Services, Providers, Clients</span></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-64 right-0 h-20 bg-[#0F1115]/80 backdrop-blur-md border-t border-white/5 px-12 flex items-center justify-between z-50">
+<button class="flex items-center gap-2 text-slate-500 hover:text-white transition-colors font-bold uppercase text-[11px] tracking-widest">
+<span class="material-symbols-outlined">chevron_left</span> Back: Who uses it?
+        </button>
+<div class="flex gap-4">
+<button class="bg-white/5 text-white px-8 py-3 rounded-xl font-bold text-xs hover:bg-white/10 transition-colors border border-white/10">
+                Save Draft
+            </button>
+<button class="bg-gradient-to-r from-primary to-[#8B5CF6] text-white px-10 py-3 rounded-xl font-black text-xs active:scale-95 transition-all shadow-[0_0_30px_rgba(99,102,241,0.3)] flex items-center gap-2">
+                Next: Auth &amp; Tenancy <span class="material-symbols-outlined">trending_flat</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
