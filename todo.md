@@ -29,16 +29,20 @@ _None_
 - [ ] Model: Generation (with cost tracking)
 - [ ] React wizard: Vite + React 18 setup
 - [ ] React wizard: Template Library page (grid of 25 templates with preview, description, category filter)
-- [ ] React wizard: Template detail modal (models included, features, industries, "Use this template" button)
-- [ ] React wizard: Step 1 — "Choose template" (or "Start from scratch" for generic)
-- [ ] React wizard: Step 2 — "Describe your app" (pre-populated from template, user customizes name + description)
-- [ ] React wizard: Step 3 — "Who uses it?" (roles pre-populated from template, user can rename/add/remove)
-- [ ] React wizard: Step 4 — "Core models" (pre-populated from template with locked + customizable models, user can rename, add fields, add new models)
-- [ ] React wizard: Step 5 — "Auth & tenancy" (pre-populated, user adjusts)
-- [ ] React wizard: Step 6 — "Integrations" (pre-checked based on template, user toggles)
-- [ ] React wizard: Step 7 — "Review & generate" (summary of template + customizations, generate button)
-- [ ] Wizard API: POST /api/wizard/save (save wizard state per step)
-- [ ] Wizard API: POST /api/wizard/suggest-models (AI suggests models from description)
+- [ ] React wizard: Template detail — shown inline on template cards (no modal, direct click-to-wizard flow)
+- [ ] React wizard: Step 1 — "Describe your app" (pre-populated from template, user customizes name + description)
+- [ ] React wizard: Step 2 — "Who uses it?" (roles pre-populated from template, user can rename/add/remove)
+- [ ] React wizard: Step 3 — "Core models" (pre-populated from template with locked + customizable models, user can rename, add fields, add new models)
+- [ ] React wizard: Step 4 — "Auth & tenancy" (pre-populated, user adjusts)
+- [ ] React wizard: Step 5 — "Integrations" (pre-checked based on template, user toggles)
+- [ ] React wizard: Step 6 — "Review & generate" (summary of template + customizations, generate button disabled until Phase 2)
+- [ ] Template Library: standalone page with category filter, template grid, "Start from Scratch" card
+- [ ] Template Library: clicking template → POST /api/wizard/projects → redirects to wizard pre-populated
+- [ ] Wizard API: GET /api/templates (list templates for library grid)
+- [ ] Wizard API: POST /api/wizard/projects (create draft project, optionally from template)
+- [ ] Wizard API: PUT /api/wizard/projects/{id} (save wizard state per step)
+- [ ] Wizard API: GET /api/wizard/projects/{id} (load project for resuming)
+- [ ] Wizard API: DELETE /api/projects/{id} (delete project)
 - [ ] Wizard state persistence (save to projects.wizard_data JSON, resume incomplete wizards)
 - [ ] Write tests: wizard save/load, user creation
 
@@ -53,6 +57,7 @@ _None_
 - [ ] Build Template #5: Project Management Tool
 - [ ] Each template: tested migrations, models with relationships, realistic seeders, API route stubs
 
+- [ ] Wizard API: POST /api/wizard/projects/{id}/suggest (AI suggests models from description — deferred from Phase 1)
 - [ ] AnthropicService — wrapper for Claude API with prompt caching
 - [ ] System prompt v1 — master prompt with TWO layers:
   - [ ] Layer 1 (cached): Base instructions for generating all output files + Laravel patterns + quality rules

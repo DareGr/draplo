@@ -77,6 +77,7 @@ Single `docker-compose up` starts everything.
 | user_id | BIGINT FK | → users.id |
 | name | VARCHAR(255) | |
 | slug | VARCHAR(100) | |
+| template_slug | VARCHAR(100) | Nullable — which template was used |
 | description | TEXT | |
 | wizard_data | JSONB | Complete wizard input |
 | generation_output | JSONB | Cached AI output |
@@ -138,12 +139,20 @@ No `stripe_events` or `server_connections` in Phase 1.
 
 All under `auth:sanctum` middleware.
 
+### `GET /api/templates`
+
+List all available templates for the library grid.
+
+- Auth: not required (public endpoint)
+- Returns: array of template metadata (name, slug, category, description, icon, models_count, complexity, tags, available)
+- `available: true` for templates with full wizard-defaults, `false` for metadata-only (shows "Coming soon")
+
 ### `POST /api/wizard/projects`
 
 Create a new draft project.
 
 - Input: `{ template_slug?: string }`
-- If `template_slug` provided, loads `wizard-defaults.json` from `storage/app/templates/{slug}/` and seeds `wizard_data`
+- If `template_slug` provided, loads `wizard-defaults.json` from `storage/app/templates/{slug}/` and seeds `wizard_data`. Stores `template_slug` on the project.
 - Sets `status: draft`, generates slug
 - Returns: project with pre-populated `wizard_data`
 
@@ -168,10 +177,18 @@ Load project with wizard data for resuming.
 
 List user's projects.
 
-- Returns: projects with status, name, template, updated_at
+- Returns: projects with status, name, template_slug, updated_at
 - For dashboard and "resume wizard" functionality
 
-### Form Validation (`UpdateWizardRequest`)
+### `DELETE /api/projects/{id}`
+
+Delete a project.
+
+- Validates ownership
+- Soft or hard delete (hard delete in Phase 1 — no audit trail needed yet)
+- Returns: 204 No Content
+
+### Form Validation (`SaveWizardStepRequest`)
 
 - `step` must be one of: `describe`, `users`, `models`, `auth`, `integrations`, `review`
 - `data` must be an object
@@ -233,6 +250,17 @@ Top bar: Draplo logo, nav links (Templates, Pricing, Docs, OS), Sign In / Deploy
 | `Chip` | Status dot (colored circle) + monospace label |
 | `CategoryFilter` | Horizontal scrollable pill buttons for template filtering |
 
+### CORS
+
+Vite dev server (port 5173) and Laravel (port 8000) run on different origins. Configure `config/cors.php` to allow the Vite dev origin. In production, the SPA is served from the same origin so CORS is not needed.
+
+### Loading & Error States
+
+- API calls show a subtle loading spinner on the "Next" / "Save Draft" button (disabled during save)
+- Failed saves show an error toast (red, auto-dismiss after 5s) with the error message
+- Navigating to a non-existent or unauthorized project shows a 404 page with "Project not found" and a link back to `/projects`
+- Template Library shows a skeleton grid while `GET /api/templates` loads
+
 ### Fonts
 
 Loaded in `app.blade.php`:
@@ -261,7 +289,8 @@ Fields:
 
 ### Step 3 — Core Models (`StepModels`)
 
-Matches `wizard_core_models` UI mockup:
+Layout and interaction reference: `wizard_core_models` UI mockup. **Note:** the mockup uses non-canonical colors (`primary: #6366F1`, `background: #0F1115`) and JetBrains Mono. Implementation MUST use the canonical DESIGN.md tokens (`primary: #c0c1ff`, `background: #121316`) and Berkeley Mono. The mockup heading uses an emoji — replace with Material Symbol icon (`database` or `schema`).
+
 - List of model cards with name, fields as chips, description
 - Locked models: lock badge, can't delete
 - Field chips with type indicators (FK, T, #, $, ?)
@@ -312,7 +341,7 @@ Horizontal scrollable pills: All, Operations, Sales, Content, Platform, Educatio
 
 3 columns desktop, 2 tablet, 1 mobile.
 
-**"Start from Scratch" card:** Dashed border, centered. Creates project with no template, enters wizard with empty defaults.
+**"Start from Scratch" card:** Dashed border, centered. Creates project with no template, enters wizard with empty defaults: `step_describe` has empty name/description/problem, `step_users` has empty roles array with app_type unset, `step_models` has empty models array (user must add at least one), `step_auth` has multi_tenant false and guest_access false, `step_integrations` has nothing pre-checked.
 
 **Template cards** (per mockup):
 - Material Symbol icon + category badge
@@ -323,6 +352,8 @@ Horizontal scrollable pills: All, Operations, Sales, Content, Platform, Educatio
 - Hover: `surface-container` → `surface-container-high`
 
 ### Click Behavior
+
+No template detail modal — clicking goes directly to wizard creation. The card itself shows enough info (description, model count, complexity, tags). A modal would add friction without adding value since the wizard step 1 already shows all template details. (todo.md listed a modal; intentionally dropped for simplicity.)
 
 Clicking a template:
 1. `POST /api/wizard/projects` with `template_slug`
@@ -393,8 +424,9 @@ php artisan serve                # Laravel dev server
 
 ## Out of Scope (Phase 1)
 
-- AI generation (Phase 2)
-- AI model suggestions (Phase 2)
+- AI generation engine (Phase 2)
+- AI model suggestions — `POST /api/wizard/projects/{id}/suggest` (Phase 2, requires AnthropicService)
+- Template detail modal (intentionally dropped — card info + wizard step 1 is sufficient)
 - GitHub OAuth (Phase 3)
 - GitHub export / ZIP download (Phase 3)
 - Stripe payments (Phase 3)
