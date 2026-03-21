@@ -66,7 +66,7 @@ Single `docker-compose up` starts everything.
 | avatar_url | VARCHAR(500) | |
 | stripe_customer_id | VARCHAR(100) | |
 | plan | VARCHAR(50) | Default: 'free' |
-| paid_at | TIMESTAMP | Nullable |
+| paid_at | TIMESTAMP | Nullable. Note: CLAUDE.md references `stripe_one_time_payment_at` — will align naming when Stripe is implemented in Phase 3 |
 | generation_count | INTEGER | Default: 0 |
 | timestamps | | |
 
