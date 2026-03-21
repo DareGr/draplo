@@ -15,8 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('github_id', 100)->nullable();
+            $table->text('github_token')->nullable();
+            $table->string('github_username', 100)->nullable();
+            $table->string('avatar_url', 500)->nullable();
+            $table->string('stripe_customer_id', 100)->nullable();
+            $table->string('plan', 50)->default('free');
+            $table->timestamp('paid_at')->nullable();
+            $table->integer('generation_count')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

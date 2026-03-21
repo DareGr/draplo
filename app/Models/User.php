@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserPlanEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +24,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'github_id',
+        'github_token',
+        'github_username',
+        'avatar_url',
+        'stripe_customer_id',
+        'plan',
+        'paid_at',
+        'generation_count',
     ];
 
     /**
@@ -32,6 +42,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'github_token',
     ];
 
     /**
@@ -42,8 +53,30 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'plan' => UserPlanEnum::class,
+            'paid_at' => 'datetime',
+            'github_token' => 'encrypted',
         ];
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function isFree(): bool
+    {
+        return $this->plan === UserPlanEnum::Free;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->plan === UserPlanEnum::Paid;
+    }
+
+    public function isSubscriber(): bool
+    {
+        return $this->plan === UserPlanEnum::Subscriber;
     }
 }
