@@ -132,7 +132,7 @@ Horizontal tab bar above the CodeViewer.
 
 - Max 5 tabs open
 - Each tab: file name (basename only, e.g., `architecture.md`) + close button (X)
-- Active tab: `bg-surface-container text-primary` with `border-b-2 border-primary`
+- Active tab: `bg-surface-container text-primary` with `border-t-2 border-primary` (top accent, per mockup)
 - Inactive: `bg-surface-container-low text-on-surface-variant hover:text-on-surface`
 - Modified files show a dot indicator (unsaved changes)
 - Clicking tab switches CodeViewer content (no API call — content in memory)
@@ -147,7 +147,7 @@ Horizontal tab bar above the CodeViewer.
 
 Bar between tabs and CodeViewer.
 
-- **Left:** File path breadcrumb in monospace — e.g., `.claude-reference / architecture.md`. Each segment clickable (navigates to directory in FileTree).
+- **Left:** "Back to Wizard" link (Material Symbol `arrow_back` + text, navigates to `/wizard/{projectId}`). File path breadcrumb in monospace — e.g., `.claude-reference / architecture.md`.
 - **Center:** Edit toggle — button with Material Symbol `edit` (read-only mode) or `edit_off` (edit mode). Label: "Edit" / "Read-only".
 - **Right:**
   - "Regenerate" button (secondary variant). Shows confirmation dialog before calling API.
@@ -161,7 +161,7 @@ Bar between tabs and CodeViewer.
 
 Right sidebar card showing generation metadata.
 
-**Data from `GET /api/projects/{id}/generation`:**
+**Data from `GET /api/projects/{id}/generation`:** (Note: the existing `status()` method in GenerationController needs to be extended to include `cache_read_tokens` and `created_at` in the generation response object.)
 
 | Field | Display |
 |-------|---------|
@@ -190,9 +190,12 @@ Right sidebar card showing generation metadata.
 2. Confirmation dialog: "This will regenerate all files. Any unsaved edits will be lost. Continue?"
 3. If confirmed: `POST /api/projects/{id}/regenerate` → returns 202
 4. PreviewLayout shows overlay: "Regenerating..." with spinner
-5. Polls `GET /api/projects/{id}/generation` every 2 seconds
-6. When status becomes `generated`: reload files from `GET /api/projects/{id}/preview`, dismiss overlay, show success toast
-7. When status becomes `failed`: dismiss overlay, show error toast
+5. Polls `GET /api/projects/{id}/generation` every 2 seconds (returns fresh project status each call)
+6. When status becomes `generated`:
+   a. Call `GET /api/projects/{id}/preview` to reload all file contents (replace in-memory state)
+   b. Call `GET /api/projects/{id}/generation` once more to get final metadata (tokens, cost)
+   c. Reset tabs to first file, dismiss overlay, show success toast
+7. When status becomes `failed`: dismiss overlay, show error toast with message
 
 ---
 
@@ -213,7 +216,14 @@ Updates a single file's content in `generation_output` JSON.
 ```php
 public function updatePreviewFile(Request $request, Project $project, string $filepath): JsonResponse
 {
-    // ownership + status check
+    if ($project->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized.');
+    }
+
+    if ($project->status !== ProjectStatusEnum::Generated) {
+        return response()->json(['message' => 'Project is not generated.'], 404);
+    }
+
     $request->validate(['content' => 'required|string']);
 
     $files = $project->generation_output;
@@ -302,3 +312,6 @@ tests/Feature/GenerationTest.php                  — add preview file update te
 - Monaco Editor (chose CodeMirror 6 instead)
 - Diff view between regenerations (future)
 - Collaborative editing (future)
+- "Build Health" indicator from mockup (decorative, defer to Phase 5 dashboard)
+- Status bar with line/column indicator, language badge (nice-to-have, add in polish pass)
+- Keyboard shortcuts for tab switching (Ctrl+Tab, defer to polish)
