@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 
 const navItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: 'dashboard', to: '/projects' },
+    { key: 'dashboard', label: 'Dashboard', icon: 'dashboard', to: '/dashboard' },
     { key: 'library', label: 'Library', icon: 'grid_view', to: '/templates' },
     { key: 'wizard', label: 'Wizard', icon: 'magic_button', to: '/wizard' },
     { key: 'deployments', label: 'Deployments', icon: 'rocket_launch', to: '/deployments' },

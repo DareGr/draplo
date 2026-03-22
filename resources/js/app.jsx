@@ -8,6 +8,9 @@ import WizardLayout from './pages/Wizard/WizardLayout';
 import PreviewLayout from './pages/Preview/PreviewLayout';
 import DeployPage from './pages/Deploy/DeployPage';
 import AuthCallback from './pages/AuthCallback';
+import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
+import Admin from './pages/Admin';
 
 function App() {
     const [ready, setReady] = useState(false);
@@ -32,7 +35,10 @@ function App() {
             <Route path="/projects/:projectId/preview" element={<PreviewLayout />} />
             <Route path="/projects/:projectId/deploy" element={<DeployPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="*" element={<Navigate to="/templates" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
     );
 }
