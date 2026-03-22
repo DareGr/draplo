@@ -7,14 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\SaveWizardStepRequest;
 use App\Models\Project;
+use App\Services\AI\AiProviderFactory;
 use App\Services\TemplateService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class WizardController extends Controller
 {
     public function __construct(
-        private TemplateService $templateService
+        private TemplateService $templateService,
+        private AiProviderFactory $providerFactory,
     ) {}
 
     private static function emptyDefaults(): array
@@ -87,5 +90,29 @@ class WizardController extends Controller
         $project->save();
 
         return response()->json($project);
+    }
+
+    public function suggest(Request $request, Project $project): JsonResponse
+    {
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $request->validate([
+            'description' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $prompt = file_get_contents(app_path('Prompts/model-suggestion.md'));
+        $provider = $this->providerFactory->resolve();
+
+        $response = $provider->generate($prompt, $request->input('description'), 4000);
+
+        $models = json_decode($response->content, true);
+
+        if (!is_array($models)) {
+            return response()->json(['models' => []], 200);
+        }
+
+        return response()->json(['models' => $models]);
     }
 }

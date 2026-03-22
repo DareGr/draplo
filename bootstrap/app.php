@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureAdmin::class,
+            'rate_limit_generation' => \App\Http\Middleware\RateLimitGeneration::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
