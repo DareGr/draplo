@@ -1,0 +1,104 @@
+{
+    "step_describe": {
+        "name": "",
+        "description": "Kanban-based project management tool with task tracking, time logging, and team collaboration",
+        "problem": "Teams lose track of tasks across spreadsheets and chat threads, lack visibility into project progress, and have no way to measure time spent"
+    },
+    "step_users": {
+        "app_type": "b2b_saas",
+        "roles": [
+            {"name": "admin", "description": "Workspace owner, manages projects, members, and billing", "removable": false, "renameable": false},
+            {"name": "member", "description": "Creates and manages tasks, logs time, collaborates", "removable": false, "renameable": false},
+            {"name": "viewer", "description": "Read-only access to projects and tasks", "removable": true, "renameable": true}
+        ]
+    },
+    "step_models": {
+        "models": [
+            {"name": "Tenant", "locked": true, "description": "Workspace or organization", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "slug", "type": "string"},
+                {"name": "logo", "type": "string"},
+                {"name": "timezone", "type": "string"}
+            ]},
+            {"name": "Project", "locked": false, "description": "Top-level container for boards and tasks", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "color", "type": "string"},
+                {"name": "status", "type": "string"},
+                {"name": "starts_at", "type": "date"},
+                {"name": "ends_at", "type": "date"},
+                {"name": "is_archived", "type": "boolean"}
+            ]},
+            {"name": "Board", "locked": false, "description": "Kanban board within a project", "fields": [
+                {"name": "project_id", "type": "foreignId"},
+                {"name": "name", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "is_default", "type": "boolean"},
+                {"name": "sort_order", "type": "integer"}
+            ]},
+            {"name": "Column", "locked": false, "description": "A column/stage on a Kanban board (e.g., To Do, In Progress, Done)", "fields": [
+                {"name": "board_id", "type": "foreignId"},
+                {"name": "name", "type": "string"},
+                {"name": "color", "type": "string"},
+                {"name": "sort_order", "type": "integer"},
+                {"name": "wip_limit", "type": "integer"}
+            ]},
+            {"name": "Task", "locked": false, "description": "Work item assigned to team members", "fields": [
+                {"name": "column_id", "type": "foreignId"},
+                {"name": "assigned_to", "type": "foreignId"},
+                {"name": "created_by", "type": "foreignId"},
+                {"name": "title", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "priority", "type": "string"},
+                {"name": "due_date", "type": "date"},
+                {"name": "sort_order", "type": "integer"},
+                {"name": "estimated_hours", "type": "decimal"},
+                {"name": "is_completed", "type": "boolean"},
+                {"name": "completed_at", "type": "timestamp"}
+            ]},
+            {"name": "TaskComment", "locked": false, "description": "Discussion thread on a task", "fields": [
+                {"name": "task_id", "type": "foreignId"},
+                {"name": "user_id", "type": "foreignId"},
+                {"name": "body", "type": "text"},
+                {"name": "created_at", "type": "timestamp"}
+            ]},
+            {"name": "TaskAttachment", "locked": false, "description": "File attached to a task", "fields": [
+                {"name": "task_id", "type": "foreignId"},
+                {"name": "user_id", "type": "foreignId"},
+                {"name": "filename", "type": "string"},
+                {"name": "file_path", "type": "string"},
+                {"name": "file_size", "type": "integer"},
+                {"name": "mime_type", "type": "string"}
+            ]},
+            {"name": "TeamMember", "locked": false, "description": "User assigned to a project with a specific role", "fields": [
+                {"name": "project_id", "type": "foreignId"},
+                {"name": "user_id", "type": "foreignId"},
+                {"name": "role", "type": "string"},
+                {"name": "joined_at", "type": "timestamp"}
+            ]},
+            {"name": "TimeEntry", "locked": false, "description": "Logged time against a task", "fields": [
+                {"name": "task_id", "type": "foreignId"},
+                {"name": "user_id", "type": "foreignId"},
+                {"name": "description", "type": "string"},
+                {"name": "duration_minutes", "type": "integer"},
+                {"name": "started_at", "type": "timestamp"},
+                {"name": "ended_at", "type": "timestamp"},
+                {"name": "is_billable", "type": "boolean"}
+            ]},
+            {"name": "Tag", "locked": false, "description": "Label for categorizing and filtering tasks", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "color", "type": "string"}
+            ]}
+        ]
+    },
+    "step_auth": {
+        "multi_tenant": true,
+        "auth_method": "sanctum",
+        "guest_access": false,
+        "guest_description": ""
+    },
+    "step_integrations": {
+        "selected": ["file_storage", "email", "websockets"],
+        "notes": "File storage for task attachments, email for notifications and assignment alerts, WebSockets for real-time board updates and task changes"
+    }
+}

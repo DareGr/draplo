@@ -1,0 +1,117 @@
+{
+    "step_describe": {
+        "name": "",
+        "description": "Digital menu and restaurant management platform with QR code ordering",
+        "problem": "Paper menus are costly to reprint, customers wait too long to get a waiter's attention, and owners lack insight into what sells"
+    },
+    "step_users": {
+        "app_type": "b2b_saas",
+        "roles": [
+            {"name": "admin", "description": "Restaurant owner, manages menu, tables, and settings", "removable": false, "renameable": false},
+            {"name": "staff", "description": "Waiter or manager, handles orders and waiter calls", "removable": true, "renameable": true},
+            {"name": "kitchen", "description": "Kitchen display, sees incoming orders and marks them ready", "removable": true, "renameable": true}
+        ]
+    },
+    "step_models": {
+        "models": [
+            {"name": "Tenant", "locked": true, "description": "Restaurant or cafe", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "address", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "logo", "type": "string"},
+                {"name": "timezone", "type": "string"},
+                {"name": "currency", "type": "string"},
+                {"name": "default_language", "type": "string"},
+                {"name": "working_hours", "type": "json"}
+            ]},
+            {"name": "Category", "locked": false, "description": "Menu section (e.g., Starters, Main Courses, Drinks)", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "sort_order", "type": "integer"},
+                {"name": "is_visible", "type": "boolean"},
+                {"name": "image_url", "type": "string"}
+            ]},
+            {"name": "MenuItem", "locked": false, "description": "Individual dish or drink on the menu", "fields": [
+                {"name": "category_id", "type": "foreignId"},
+                {"name": "name", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "price", "type": "decimal"},
+                {"name": "image_url", "type": "string"},
+                {"name": "is_available", "type": "boolean"},
+                {"name": "sort_order", "type": "integer"},
+                {"name": "allergens", "type": "json"},
+                {"name": "badges", "type": "json"},
+                {"name": "preparation_time_minutes", "type": "integer"},
+                {"name": "calories", "type": "integer"}
+            ]},
+            {"name": "Table", "locked": false, "description": "Physical table in the restaurant", "fields": [
+                {"name": "number", "type": "string"},
+                {"name": "capacity", "type": "integer"},
+                {"name": "zone", "type": "string"},
+                {"name": "is_active", "type": "boolean"}
+            ]},
+            {"name": "Order", "locked": false, "description": "Guest order placed from QR menu or by staff", "fields": [
+                {"name": "table_id", "type": "foreignId"},
+                {"name": "order_number", "type": "string"},
+                {"name": "status", "type": "string"},
+                {"name": "total_amount", "type": "decimal"},
+                {"name": "notes", "type": "text"},
+                {"name": "placed_at", "type": "timestamp"},
+                {"name": "completed_at", "type": "timestamp"}
+            ]},
+            {"name": "OrderItem", "locked": false, "description": "Individual item within an order", "fields": [
+                {"name": "order_id", "type": "foreignId"},
+                {"name": "menu_item_id", "type": "foreignId"},
+                {"name": "quantity", "type": "integer"},
+                {"name": "unit_price", "type": "decimal"},
+                {"name": "special_requests", "type": "text"},
+                {"name": "status", "type": "string"}
+            ]},
+            {"name": "WaiterCall", "locked": false, "description": "Real-time notification from guest to staff", "fields": [
+                {"name": "table_id", "type": "foreignId"},
+                {"name": "type", "type": "string"},
+                {"name": "message", "type": "string"},
+                {"name": "status", "type": "string"},
+                {"name": "acknowledged_by", "type": "foreignId"},
+                {"name": "acknowledged_at", "type": "timestamp"}
+            ]},
+            {"name": "Review", "locked": false, "description": "Guest feedback after their visit", "fields": [
+                {"name": "table_id", "type": "foreignId"},
+                {"name": "rating", "type": "integer"},
+                {"name": "comment", "type": "text"},
+                {"name": "visit_date", "type": "date"}
+            ]},
+            {"name": "Template", "locked": false, "description": "Visual theme/template for the digital menu", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "slug", "type": "string"},
+                {"name": "config", "type": "json"},
+                {"name": "preview_image", "type": "string"},
+                {"name": "is_default", "type": "boolean"}
+            ]},
+            {"name": "QRCode", "locked": false, "description": "Generated QR code linked to a table", "fields": [
+                {"name": "table_id", "type": "foreignId"},
+                {"name": "code", "type": "string"},
+                {"name": "url", "type": "string"},
+                {"name": "is_active", "type": "boolean"},
+                {"name": "generated_at", "type": "timestamp"}
+            ]},
+            {"name": "Scan", "locked": false, "description": "Analytics record when a QR code is scanned", "fields": [
+                {"name": "qr_code_id", "type": "foreignId"},
+                {"name": "ip_address", "type": "string"},
+                {"name": "user_agent", "type": "string"},
+                {"name": "language", "type": "string"},
+                {"name": "scanned_at", "type": "timestamp"}
+            ]}
+        ]
+    },
+    "step_auth": {
+        "multi_tenant": true,
+        "auth_method": "sanctum",
+        "guest_access": true,
+        "guest_description": "Customers scan a QR code on their table to view the digital menu, place orders, and call the waiter without registration"
+    },
+    "step_integrations": {
+        "selected": ["email", "websockets"],
+        "notes": "WebSockets for real-time waiter call notifications and kitchen order updates, email for daily reports and owner notifications"
+    }
+}
