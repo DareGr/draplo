@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Export\GitHubExportController;
+use App\Http\Controllers\Export\ZipExportController;
 use App\Http\Controllers\GenerationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TemplateController;
@@ -39,6 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
         ->where('filepath', '.*');
     Route::put('/projects/{project}/preview/{filepath}', [GenerationController::class, 'updatePreviewFile'])
         ->where('filepath', '.*');
+
+    // Export
+    Route::post('/projects/{project}/export/github', [GitHubExportController::class, 'export']);
+    Route::get('/projects/{project}/export/status', [GitHubExportController::class, 'status']);
+    Route::get('/projects/{project}/export/zip', [ZipExportController::class, 'download']);
 
     // Admin
     Route::middleware('admin')->prefix('admin')->group(function () {
