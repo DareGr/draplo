@@ -1,0 +1,118 @@
+{
+    "step_describe": {
+        "name": "",
+        "description": "Customer relationship management platform with deal pipeline and activity tracking",
+        "problem": "Sales teams lose track of leads, forget follow-ups, and lack visibility into deal progress across the pipeline"
+    },
+    "step_users": {
+        "app_type": "b2b_saas",
+        "roles": [
+            {"name": "admin", "description": "Manages everything: users, pipelines, settings, reports", "removable": false, "renameable": false},
+            {"name": "sales_rep", "description": "Manages own contacts, deals, and activities", "removable": true, "renameable": true},
+            {"name": "manager", "description": "Views reports, manages pipelines, oversees team performance", "removable": true, "renameable": true}
+        ]
+    },
+    "step_models": {
+        "models": [
+            {"name": "Tenant", "locked": true, "description": "Organization/company account", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "domain", "type": "string"},
+                {"name": "logo", "type": "string"},
+                {"name": "currency", "type": "string"},
+                {"name": "timezone", "type": "string"},
+                {"name": "settings", "type": "json"}
+            ]},
+            {"name": "Contact", "locked": false, "description": "Individual person (lead, prospect, or customer)", "fields": [
+                {"name": "first_name", "type": "string"},
+                {"name": "last_name", "type": "string"},
+                {"name": "email", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "job_title", "type": "string"},
+                {"name": "company_id", "type": "foreignId"},
+                {"name": "owner_id", "type": "foreignId"},
+                {"name": "source", "type": "string"},
+                {"name": "avatar", "type": "string"},
+                {"name": "last_contacted_at", "type": "timestamp"}
+            ]},
+            {"name": "Company", "locked": false, "description": "Business organization that contacts belong to", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "domain", "type": "string"},
+                {"name": "industry", "type": "string"},
+                {"name": "size", "type": "string"},
+                {"name": "address", "type": "text"},
+                {"name": "phone", "type": "string"},
+                {"name": "website", "type": "string"},
+                {"name": "annual_revenue", "type": "decimal"},
+                {"name": "owner_id", "type": "foreignId"}
+            ]},
+            {"name": "Deal", "locked": false, "description": "Sales opportunity with monetary value", "fields": [
+                {"name": "title", "type": "string"},
+                {"name": "deal_value", "type": "decimal"},
+                {"name": "currency", "type": "string"},
+                {"name": "pipeline_id", "type": "foreignId"},
+                {"name": "pipeline_stage_id", "type": "foreignId"},
+                {"name": "contact_id", "type": "foreignId"},
+                {"name": "company_id", "type": "foreignId"},
+                {"name": "owner_id", "type": "foreignId"},
+                {"name": "expected_close_date", "type": "timestamp"},
+                {"name": "probability", "type": "integer"},
+                {"name": "status", "type": "string"},
+                {"name": "lost_reason", "type": "string"},
+                {"name": "closed_at", "type": "timestamp"}
+            ]},
+            {"name": "Pipeline", "locked": false, "description": "Sales pipeline grouping stages", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "is_default", "type": "boolean"},
+                {"name": "is_active", "type": "boolean"}
+            ]},
+            {"name": "PipelineStage", "locked": false, "description": "Stage within a pipeline (e.g., Qualified, Proposal, Negotiation)", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "pipeline_id", "type": "foreignId"},
+                {"name": "position", "type": "integer"},
+                {"name": "color", "type": "string"},
+                {"name": "default_probability", "type": "integer"},
+                {"name": "is_win_stage", "type": "boolean"},
+                {"name": "is_loss_stage", "type": "boolean"}
+            ]},
+            {"name": "Activity", "locked": false, "description": "Logged interaction (call, email, meeting, task)", "fields": [
+                {"name": "type", "type": "string"},
+                {"name": "subject", "type": "string"},
+                {"name": "description", "type": "text"},
+                {"name": "contact_id", "type": "foreignId"},
+                {"name": "deal_id", "type": "foreignId"},
+                {"name": "user_id", "type": "foreignId"},
+                {"name": "due_at", "type": "timestamp"},
+                {"name": "completed_at", "type": "timestamp"},
+                {"name": "is_completed", "type": "boolean"}
+            ]},
+            {"name": "Note", "locked": false, "description": "Free-text note on a contact, company, or deal", "fields": [
+                {"name": "body", "type": "text"},
+                {"name": "notable_type", "type": "string"},
+                {"name": "notable_id", "type": "integer"},
+                {"name": "user_id", "type": "foreignId"}
+            ]},
+            {"name": "Tag", "locked": false, "description": "Label for categorizing contacts, companies, and deals", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "color", "type": "string"}
+            ]},
+            {"name": "CustomField", "locked": false, "description": "User-defined field for contacts, companies, or deals", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "field_type", "type": "string"},
+                {"name": "entity_type", "type": "string"},
+                {"name": "options", "type": "json"},
+                {"name": "is_required", "type": "boolean"},
+                {"name": "position", "type": "integer"}
+            ]}
+        ]
+    },
+    "step_auth": {
+        "multi_tenant": true,
+        "auth_method": "sanctum",
+        "guest_access": false,
+        "guest_description": ""
+    },
+    "step_integrations": {
+        "selected": ["email", "stripe"],
+        "notes": "Email for contact communication and activity notifications, Stripe for subscription billing of the CRM platform itself"
+    }
+}

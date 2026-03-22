@@ -1,0 +1,142 @@
+{
+    "step_describe": {
+        "name": "",
+        "description": "Invoice generation and billing platform with expense tracking and recurring invoices",
+        "problem": "Small businesses and freelancers waste hours creating invoices manually, lose track of payments, and lack visibility into outstanding receivables and expenses"
+    },
+    "step_users": {
+        "app_type": "b2b_saas",
+        "roles": [
+            {"name": "admin", "description": "Full access: manages clients, invoices, expenses, settings, bank accounts", "removable": false, "renameable": false},
+            {"name": "accountant", "description": "Creates and manages invoices and expenses, views financial reports", "removable": true, "renameable": true},
+            {"name": "client_portal", "description": "Client-facing role: views own invoices and makes payments", "removable": false, "renameable": false}
+        ]
+    },
+    "step_models": {
+        "models": [
+            {"name": "Tenant", "locked": true, "description": "Business account issuing invoices", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "email", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "address", "type": "text"},
+                {"name": "tax_number", "type": "string"},
+                {"name": "logo", "type": "string"},
+                {"name": "default_currency", "type": "string"},
+                {"name": "invoice_prefix", "type": "string"},
+                {"name": "next_invoice_number", "type": "integer"},
+                {"name": "payment_terms_days", "type": "integer"},
+                {"name": "invoice_footer_note", "type": "text"}
+            ]},
+            {"name": "Client", "locked": false, "description": "Customer who receives invoices", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "email", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "address", "type": "text"},
+                {"name": "tax_number", "type": "string"},
+                {"name": "currency", "type": "string"},
+                {"name": "payment_terms_days", "type": "integer"},
+                {"name": "notes", "type": "text"},
+                {"name": "portal_enabled", "type": "boolean"}
+            ]},
+            {"name": "Invoice", "locked": false, "description": "Bill sent to a client for products or services", "fields": [
+                {"name": "invoice_number", "type": "string"},
+                {"name": "client_id", "type": "foreignId"},
+                {"name": "status", "type": "string"},
+                {"name": "issue_date", "type": "timestamp"},
+                {"name": "due_date", "type": "timestamp"},
+                {"name": "subtotal", "type": "decimal"},
+                {"name": "tax_amount", "type": "decimal"},
+                {"name": "discount_amount", "type": "decimal"},
+                {"name": "total", "type": "decimal"},
+                {"name": "amount_paid", "type": "decimal"},
+                {"name": "currency", "type": "string"},
+                {"name": "notes", "type": "text"},
+                {"name": "footer", "type": "text"},
+                {"name": "sent_at", "type": "timestamp"},
+                {"name": "paid_at", "type": "timestamp"},
+                {"name": "recurring_invoice_id", "type": "foreignId"}
+            ]},
+            {"name": "InvoiceItem", "locked": false, "description": "Line item on an invoice", "fields": [
+                {"name": "invoice_id", "type": "foreignId"},
+                {"name": "description", "type": "string"},
+                {"name": "quantity", "type": "decimal"},
+                {"name": "unit_price", "type": "decimal"},
+                {"name": "tax_rate_id", "type": "foreignId"},
+                {"name": "tax_amount", "type": "decimal"},
+                {"name": "discount_percent", "type": "decimal"},
+                {"name": "line_total", "type": "decimal"},
+                {"name": "position", "type": "integer"}
+            ]},
+            {"name": "Payment", "locked": false, "description": "Payment received against an invoice", "fields": [
+                {"name": "invoice_id", "type": "foreignId"},
+                {"name": "amount", "type": "decimal"},
+                {"name": "payment_method", "type": "string"},
+                {"name": "payment_date", "type": "timestamp"},
+                {"name": "reference", "type": "string"},
+                {"name": "notes", "type": "text"},
+                {"name": "bank_account_id", "type": "foreignId"},
+                {"name": "stripe_payment_id", "type": "string"}
+            ]},
+            {"name": "Expense", "locked": false, "description": "Business expense for tracking costs", "fields": [
+                {"name": "description", "type": "string"},
+                {"name": "amount", "type": "decimal"},
+                {"name": "currency", "type": "string"},
+                {"name": "expense_date", "type": "timestamp"},
+                {"name": "expense_category_id", "type": "foreignId"},
+                {"name": "vendor", "type": "string"},
+                {"name": "receipt_path", "type": "string"},
+                {"name": "is_billable", "type": "boolean"},
+                {"name": "client_id", "type": "foreignId"},
+                {"name": "notes", "type": "text"}
+            ]},
+            {"name": "ExpenseCategory", "locked": false, "description": "Category for organizing expenses", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "color", "type": "string"},
+                {"name": "is_active", "type": "boolean"}
+            ]},
+            {"name": "TaxRate", "locked": false, "description": "Tax rate applied to invoice items", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "rate", "type": "decimal"},
+                {"name": "is_compound", "type": "boolean"},
+                {"name": "is_default", "type": "boolean"},
+                {"name": "is_active", "type": "boolean"}
+            ]},
+            {"name": "RecurringInvoice", "locked": false, "description": "Template for automatically generated invoices on a schedule", "fields": [
+                {"name": "client_id", "type": "foreignId"},
+                {"name": "frequency", "type": "string"},
+                {"name": "start_date", "type": "timestamp"},
+                {"name": "end_date", "type": "timestamp"},
+                {"name": "next_generate_date", "type": "timestamp"},
+                {"name": "subtotal", "type": "decimal"},
+                {"name": "tax_amount", "type": "decimal"},
+                {"name": "total", "type": "decimal"},
+                {"name": "currency", "type": "string"},
+                {"name": "auto_send", "type": "boolean"},
+                {"name": "is_active", "type": "boolean"},
+                {"name": "notes", "type": "text"},
+                {"name": "last_generated_at", "type": "timestamp"}
+            ]},
+            {"name": "BankAccount", "locked": false, "description": "Bank account for receiving payments", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "bank_name", "type": "string"},
+                {"name": "account_number", "type": "string"},
+                {"name": "routing_number", "type": "string"},
+                {"name": "iban", "type": "string"},
+                {"name": "swift_code", "type": "string"},
+                {"name": "currency", "type": "string"},
+                {"name": "is_default", "type": "boolean"},
+                {"name": "is_active", "type": "boolean"}
+            ]}
+        ]
+    },
+    "step_auth": {
+        "multi_tenant": true,
+        "auth_method": "sanctum",
+        "guest_access": true,
+        "guest_description": "Client portal where clients view their invoices and make payments without full registration"
+    },
+    "step_integrations": {
+        "selected": ["stripe", "email"],
+        "notes": "Stripe for online invoice payments and client portal checkout, email for sending invoices, payment confirmations, and overdue reminders"
+    }
+}
