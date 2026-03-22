@@ -16,6 +16,9 @@ Route::get('/dev/login', DevLoginController::class);
 Route::get('/auth/github', [GitHubAuthController::class, 'redirect']);
 Route::get('/auth/github/callback', [GitHubAuthController::class, 'callback']);
 
+// Sitemap (XML)
+Route::get('/sitemap.xml', fn () => response()->view('sitemap')->header('Content-Type', 'application/xml'));
+
 // React SPA catch-all — serves app.blade.php for all SPA routes
 Route::get('/{any}', function () {
     return view('app');
