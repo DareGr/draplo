@@ -15,7 +15,7 @@ class SaveWizardStepRequest extends FormRequest
     {
         $rules = [
             'step' => ['required', 'string', 'in:describe,users,models,auth,integrations,review'],
-            'data' => ['required', 'array'],
+            'data' => ['present', 'array'],
         ];
 
         if ($this->input('step') === 'describe') {
