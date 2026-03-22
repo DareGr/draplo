@@ -32,6 +32,7 @@ class User extends Authenticatable
         'plan',
         'paid_at',
         'generation_count',
+        'is_admin',
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable
             'plan' => UserPlanEnum::class,
             'paid_at' => 'datetime',
             'github_token' => 'encrypted',
+            'is_admin' => 'boolean',
         ];
     }
 

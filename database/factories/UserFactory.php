@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'avatar_url' => fake()->imageUrl(200, 200),
             'plan' => UserPlanEnum::Free,
             'generation_count' => 0,
+            'is_admin' => false,
         ];
     }
 }
