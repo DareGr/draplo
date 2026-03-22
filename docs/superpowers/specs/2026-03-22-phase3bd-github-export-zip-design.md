@@ -108,6 +108,10 @@ Route::get('/auth/github', [GitHubAuthController::class, 'redirect']);
 Route::get('/auth/github/callback', [GitHubAuthController::class, 'callback']);
 ```
 
+**Important:** Update the SPA catch-all regex to exclude `/auth`: change `^(?!api|dev|sanctum|horizon).*$` to `^(?!api|dev|auth|sanctum|horizon).*$`. Otherwise the catch-all would intercept `/auth/github/callback` before Laravel's route can handle it.
+
+**CSRF note:** Both routes are GET requests, so Laravel's CSRF middleware does not apply. Socialite handles OAuth CSRF via the `state` parameter automatically.
+
 ---
 
 ## 2. GitHubService + Export
@@ -145,9 +149,12 @@ Steps:
 **Error handling:**
 - 401: token expired/revoked → throw with "GitHub token expired. Please re-login."
 - 422 (repo name taken): throw with "Repository name already exists."
+- 403/429 (rate limit): retry with exponential backoff (1s, 2s, 4s), max 3 retries per request. Critical for blob creation loop (30+ sequential requests).
 - Other errors: throw with GitHub API error message
 
 **HTTP config:** timeout 30s, connect timeout 10s. All requests use `Accept: application/vnd.github.v3+json`.
+
+**Scope note:** The `repo` scope grants full access to all user repos. This is the minimum GitHub scope for creating private repos — GitHub does not offer a narrower scope. Future improvement: migrate to a GitHub App for granular permissions.
 
 ### PushToGitHubJob
 
@@ -165,15 +172,16 @@ $timeout = 60, $tries = 1
 
 **`POST /api/projects/{project}/export/github`**
 - Input: `{ repo_name?: string }` (defaults to project slug)
-- Validates: ownership, status is `generated`, user has `github_token`
+- Validates: ownership, status is `generated` or `exported` (re-export allowed), user has `github_token`
+- Sets project status to `exporting` (new enum value — add `Exporting` to `ProjectStatusEnum`)
 - Dispatches PushToGitHubJob
 - Returns: 202 `{ status: 'exporting', message: 'Export started' }`
 
 **`GET /api/projects/{project}/export/status`**
 - Returns export status:
+  - If `exporting`: `{ status: 'exporting' }` (job in progress)
   - If `exported`: `{ status: 'exported', github_repo_url, github_repo_name, exported_at }`
-  - If `generated` (not yet exported or export in progress): `{ status: 'pending' }`
-  - Checks if a job is currently running by looking at project fields
+  - Otherwise: `{ status: 'pending' }`
 
 **Controller:** `app/Http/Controllers/Export/GitHubExportController.php`
 
@@ -326,7 +334,8 @@ tests/Feature/GitHubServiceTest.php
 
 ### Files to modify
 ```
-routes/web.php                                    — add GitHub OAuth routes
+.claude-reference/architecture.md                 — update Export endpoint auth from "Paid" to "Yes" (Stripe gate deferred)
+routes/web.php                                    — add GitHub OAuth routes, update SPA catch-all regex to exclude /auth
 routes/api.php                                    — add export endpoints
 config/services.php                               — add GitHub OAuth config
 .env.example                                      — add GITHUB_CLIENT_ID, SECRET, REDIRECT
