@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ensureAuth } from './api';
 import AppLayout from './components/AppLayout';
+import WizardLayout from './pages/Wizard/WizardLayout';
 
 function TemplateLibrary() {
     return (
@@ -49,6 +50,7 @@ function App() {
                     <ProjectList />
                 </AppLayout>
             } />
+            <Route path="/wizard/:projectId" element={<WizardLayout />} />
             <Route path="*" element={<Navigate to="/templates" replace />} />
         </Routes>
     );
