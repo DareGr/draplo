@@ -32,7 +32,7 @@ class TemplateSeeder extends Seeder
                 'complexity' => 'medium-high',
                 'models_count' => 10,
                 'tags' => ['Kanban', 'Tasks'],
-                'available' => false,
+                'available' => true,
             ],
             [
                 'name' => 'Inventory & Stock Management',
@@ -76,7 +76,7 @@ class TemplateSeeder extends Seeder
                 'complexity' => 'medium-high',
                 'models_count' => 10,
                 'tags' => ['Pipeline', 'SaaS'],
-                'available' => false,
+                'available' => true,
             ],
             [
                 'name' => 'Invoice & Billing Platform',
@@ -87,7 +87,7 @@ class TemplateSeeder extends Seeder
                 'complexity' => 'medium',
                 'models_count' => 10,
                 'tags' => ['Invoicing', 'Finance'],
-                'available' => false,
+                'available' => true,
             ],
             [
                 'name' => 'E-commerce / Online Store',
@@ -230,7 +230,7 @@ class TemplateSeeder extends Seeder
                 'complexity' => 'medium',
                 'models_count' => 11,
                 'tags' => ['Menu', 'QR Code'],
-                'available' => false,
+                'available' => true,
             ],
             [
                 'name' => 'Property / Rental Management',
