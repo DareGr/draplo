@@ -1,0 +1,14 @@
+{
+    "name": "Helpdesk & Support Tickets",
+    "slug": "helpdesk",
+    "category": "content",
+    "description": "Ticket management with assignment, SLA tracking, canned responses, and customer portal.",
+    "icon": "support_agent",
+    "complexity": "medium-high",
+    "models_count": 11,
+    "tags": [
+        "Support",
+        "Tickets"
+    ],
+    "available": false
+}

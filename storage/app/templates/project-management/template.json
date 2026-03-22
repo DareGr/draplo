@@ -1,0 +1,14 @@
+{
+    "name": "Project Management Tool",
+    "slug": "project-management",
+    "category": "operations",
+    "description": "Kanban boards, task assignments, time tracking, and team collaboration for agencies and dev teams.",
+    "icon": "task_alt",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Kanban",
+        "Tasks"
+    ],
+    "available": false
+}

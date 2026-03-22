@@ -1,0 +1,86 @@
+{
+    "step_describe": {
+        "name": "",
+        "description": "Online booking and appointment management platform",
+        "problem": "Manual scheduling via phone/Viber leads to double bookings, no-shows, and wasted time"
+    },
+    "step_users": {
+        "app_type": "b2b_saas",
+        "roles": [
+            {"name": "admin", "description": "Business owner, manages everything", "removable": false, "renameable": false},
+            {"name": "provider", "description": "Service provider (e.g., hairdresser, dentist, trainer)", "removable": true, "renameable": true},
+            {"name": "client", "description": "Books appointments, receives reminders", "removable": false, "renameable": false}
+        ]
+    },
+    "step_models": {
+        "models": [
+            {"name": "Tenant", "locked": true, "description": "Business/venue", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "address", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "logo", "type": "string"},
+                {"name": "timezone", "type": "string"},
+                {"name": "working_hours", "type": "json"}
+            ]},
+            {"name": "Service", "locked": false, "description": "Offered service", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "duration_minutes", "type": "integer"},
+                {"name": "price", "type": "decimal"},
+                {"name": "description", "type": "text"},
+                {"name": "active", "type": "boolean"}
+            ]},
+            {"name": "Provider", "locked": false, "description": "Person who delivers the service", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "email", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "specialization", "type": "string"},
+                {"name": "working_hours", "type": "json"},
+                {"name": "active", "type": "boolean"}
+            ]},
+            {"name": "Appointment", "locked": false, "description": "Scheduled booking", "fields": [
+                {"name": "client_id", "type": "foreignId"},
+                {"name": "provider_id", "type": "foreignId"},
+                {"name": "service_id", "type": "foreignId"},
+                {"name": "starts_at", "type": "timestamp"},
+                {"name": "ends_at", "type": "timestamp"},
+                {"name": "status", "type": "string"},
+                {"name": "notes", "type": "text"}
+            ]},
+            {"name": "Client", "locked": false, "description": "Customer who books", "fields": [
+                {"name": "name", "type": "string"},
+                {"name": "email", "type": "string"},
+                {"name": "phone", "type": "string"},
+                {"name": "notes", "type": "text"}
+            ]},
+            {"name": "WorkingHours", "locked": false, "description": "Provider availability per day", "fields": [
+                {"name": "provider_id", "type": "foreignId"},
+                {"name": "day_of_week", "type": "integer"},
+                {"name": "start_time", "type": "string"},
+                {"name": "end_time", "type": "string"}
+            ]},
+            {"name": "BlockedSlot", "locked": false, "description": "Time off / unavailable period", "fields": [
+                {"name": "provider_id", "type": "foreignId"},
+                {"name": "starts_at", "type": "timestamp"},
+                {"name": "ends_at", "type": "timestamp"},
+                {"name": "reason", "type": "string"}
+            ]},
+            {"name": "Reminder", "locked": false, "description": "SMS/email reminder", "fields": [
+                {"name": "appointment_id", "type": "foreignId"},
+                {"name": "type", "type": "string"},
+                {"name": "scheduled_at", "type": "timestamp"},
+                {"name": "sent_at", "type": "timestamp"},
+                {"name": "status", "type": "string"}
+            ]}
+        ]
+    },
+    "step_auth": {
+        "multi_tenant": true,
+        "auth_method": "sanctum",
+        "guest_access": true,
+        "guest_description": "Public booking page where clients book without registration"
+    },
+    "step_integrations": {
+        "selected": ["sms", "stripe", "email"],
+        "notes": "SMS for appointment reminders, Stripe for online payment/deposit, email for confirmations"
+    }
+}

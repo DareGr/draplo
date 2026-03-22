@@ -1,0 +1,14 @@
+{
+    "name": "LMS (Learning Management)",
+    "slug": "lms",
+    "category": "education",
+    "description": "Course builder, video lessons, progress tracking, quizzes, certificates, and instructor dashboards.",
+    "icon": "school",
+    "complexity": "high",
+    "models_count": 12,
+    "tags": [
+        "Courses",
+        "Learning"
+    ],
+    "available": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Property / Rental Management",
+    "slug": "property-rental",
+    "category": "hospitality",
+    "description": "Property listings, availability calendar, booking management, seasonal pricing, and guest communication.",
+    "icon": "home_work",
+    "complexity": "high",
+    "models_count": 12,
+    "tags": [
+        "Rentals",
+        "Booking"
+    ],
+    "available": false
+}

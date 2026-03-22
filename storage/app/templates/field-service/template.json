@@ -1,0 +1,14 @@
+{
+    "name": "Field Service Management",
+    "slug": "field-service",
+    "category": "operations",
+    "description": "Work orders, technician dispatch, parts tracking, and client portal for repair and maintenance businesses.",
+    "icon": "engineering",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Dispatch",
+        "Work Orders"
+    ],
+    "available": false
+}

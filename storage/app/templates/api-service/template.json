@@ -1,0 +1,14 @@
+{
+    "name": "API-as-a-Service",
+    "slug": "api-service",
+    "category": "specialized",
+    "description": "API key management, rate limiting, usage metering, subscription billing, and auto-generated docs.",
+    "icon": "terminal",
+    "complexity": "medium-high",
+    "models_count": 11,
+    "tags": [
+        "Developer",
+        "Backend"
+    ],
+    "available": false
+}

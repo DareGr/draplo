@@ -1,0 +1,14 @@
+{
+    "name": "Monitoring & Alerting",
+    "slug": "monitoring-alerting",
+    "category": "analytics",
+    "description": "Uptime monitors, incident management, public status pages, and multi-channel alerts.",
+    "icon": "monitor_heart",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Uptime",
+        "Alerts"
+    ],
+    "available": false
+}

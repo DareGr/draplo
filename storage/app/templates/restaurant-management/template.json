@@ -1,0 +1,14 @@
+{
+    "name": "Restaurant & Café Management",
+    "slug": "restaurant-management",
+    "category": "hospitality",
+    "description": "Digital menu with QR codes, table management, waiter calls, and multi-language support.",
+    "icon": "restaurant",
+    "complexity": "medium",
+    "models_count": 11,
+    "tags": [
+        "Menu",
+        "QR Code"
+    ],
+    "available": false
+}

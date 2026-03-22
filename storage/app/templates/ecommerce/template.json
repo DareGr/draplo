@@ -1,0 +1,14 @@
+{
+    "name": "E-commerce / Online Store",
+    "slug": "ecommerce",
+    "category": "sales",
+    "description": "Product catalog with variants, shopping cart, checkout, order management, and Stripe payments.",
+    "icon": "shopping_cart",
+    "complexity": "high",
+    "models_count": 13,
+    "tags": [
+        "Store",
+        "Payments"
+    ],
+    "available": false
+}

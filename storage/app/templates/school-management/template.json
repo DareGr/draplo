@@ -1,0 +1,14 @@
+{
+    "name": "School / Academy Management",
+    "slug": "school-management",
+    "category": "education",
+    "description": "Student enrollment, class scheduling, attendance, payment plans, and progress reports.",
+    "icon": "menu_book",
+    "complexity": "medium-high",
+    "models_count": 12,
+    "tags": [
+        "Students",
+        "Classes"
+    ],
+    "available": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Fitness & Wellness Platform",
+    "slug": "fitness-wellness",
+    "category": "health",
+    "description": "Training plans, exercise library, workout logging, meal planning, and client portal.",
+    "icon": "fitness_center",
+    "complexity": "medium",
+    "models_count": 12,
+    "tags": [
+        "Training",
+        "Health"
+    ],
+    "available": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Analytics / Dashboard Builder",
+    "slug": "analytics-dashboard",
+    "category": "analytics",
+    "description": "Drag-drop dashboards, multiple chart types, data source connections, and scheduled reports.",
+    "icon": "bar_chart",
+    "complexity": "high",
+    "models_count": 10,
+    "tags": [
+        "Charts",
+        "BI"
+    ],
+    "available": false
+}

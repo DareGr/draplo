@@ -1,0 +1,14 @@
+{
+    "name": "Invoice & Billing Platform",
+    "slug": "invoice-billing",
+    "category": "sales",
+    "description": "Invoice generation, recurring billing, expense tracking, and financial dashboards for freelancers and agencies.",
+    "icon": "receipt_long",
+    "complexity": "medium",
+    "models_count": 10,
+    "tags": [
+        "Invoicing",
+        "Finance"
+    ],
+    "available": false
+}

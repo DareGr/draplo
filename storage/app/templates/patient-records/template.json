@@ -1,0 +1,14 @@
+{
+    "name": "Patient / Client Records",
+    "slug": "patient-records",
+    "category": "health",
+    "description": "Patient profiles with medical history, treatment records, document uploads, and GDPR compliance.",
+    "icon": "health_and_safety",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "EHR",
+        "Compliance"
+    ],
+    "available": false
+}

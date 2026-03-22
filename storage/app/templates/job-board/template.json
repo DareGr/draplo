@@ -1,0 +1,14 @@
+{
+    "name": "Job Board / Recruitment",
+    "slug": "job-board",
+    "category": "marketplace",
+    "description": "Job posting, application flow, applicant tracking, company profiles, and email alerts.",
+    "icon": "work",
+    "complexity": "medium",
+    "models_count": 10,
+    "tags": [
+        "Jobs",
+        "Hiring"
+    ],
+    "available": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Two-Sided Marketplace",
+    "slug": "marketplace",
+    "category": "marketplace",
+    "description": "Seller profiles, listings, messaging, order flow, reviews, and split payments for service or product marketplaces.",
+    "icon": "storefront",
+    "complexity": "high",
+    "models_count": 12,
+    "tags": [
+        "Listings",
+        "Payments"
+    ],
+    "available": false
+}

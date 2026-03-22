@@ -1,0 +1,14 @@
+{
+    "name": "Content Management / Blog",
+    "slug": "cms-blog",
+    "category": "content",
+    "description": "Multi-author blog with rich editor, SEO, categories, revision history, and media library.",
+    "icon": "article",
+    "complexity": "medium",
+    "models_count": 11,
+    "tags": [
+        "Publishing",
+        "SEO"
+    ],
+    "available": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Newsletter & Email Marketing",
+    "slug": "newsletter",
+    "category": "content",
+    "description": "Subscriber management, campaign builder, email templates, and open/click analytics.",
+    "icon": "mail",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Email",
+        "Marketing"
+    ],
+    "available": false
+}

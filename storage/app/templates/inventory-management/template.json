@@ -1,0 +1,14 @@
+{
+    "name": "Inventory & Stock Management",
+    "slug": "inventory-management",
+    "category": "operations",
+    "description": "Real-time stock tracking across multiple locations with low-stock alerts and SKU management.",
+    "icon": "inventory_2",
+    "complexity": "medium",
+    "models_count": 9,
+    "tags": [
+        "Logistics",
+        "Retail"
+    ],
+    "available": false
+}

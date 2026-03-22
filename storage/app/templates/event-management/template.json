@@ -1,0 +1,14 @@
+{
+    "name": "Event Management Platform",
+    "slug": "event-management",
+    "category": "specialized",
+    "description": "Event creation, ticket sales, attendee management, speaker profiles, and QR check-in.",
+    "icon": "event",
+    "complexity": "medium-high",
+    "models_count": 12,
+    "tags": [
+        "Events",
+        "Tickets"
+    ],
+    "available": false
+}

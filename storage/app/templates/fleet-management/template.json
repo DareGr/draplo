@@ -1,0 +1,14 @@
+{
+    "name": "Fleet & Vehicle Management",
+    "slug": "fleet-management",
+    "category": "operations",
+    "description": "Vehicle tracking, maintenance schedules, fuel logging, and driver management for logistics companies.",
+    "icon": "local_shipping",
+    "complexity": "medium",
+    "models_count": 9,
+    "tags": [
+        "Vehicles",
+        "Logistics"
+    ],
+    "available": false
+}

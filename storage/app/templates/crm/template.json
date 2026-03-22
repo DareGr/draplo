@@ -1,0 +1,14 @@
+{
+    "name": "CRM",
+    "slug": "crm",
+    "category": "sales",
+    "description": "Customer relationship management with pipeline tracking, interaction history, and lead scoring.",
+    "icon": "bolt",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Pipeline",
+        "SaaS"
+    ],
+    "available": false
+}

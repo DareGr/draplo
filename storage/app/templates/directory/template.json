@@ -1,0 +1,14 @@
+{
+    "name": "Directory & Listing Platform",
+    "slug": "directory",
+    "category": "marketplace",
+    "description": "Categorized listings with search, reviews, business claiming, and promoted listings.",
+    "icon": "place",
+    "complexity": "medium",
+    "models_count": 11,
+    "tags": [
+        "Listings",
+        "Search"
+    ],
+    "available": false
+}

@@ -1,0 +1,13 @@
+{
+    "name": "Booking & Reservation Platform",
+    "slug": "booking-platform",
+    "category": "operations",
+    "description": "Appointment scheduling with calendar, reminders, and online booking. Perfect for salons, clinics, studios, sports courts.",
+    "icon": "calendar_month",
+    "industries": ["healthcare", "beauty", "fitness", "education", "services"],
+    "complexity": "medium",
+    "models_count": 8,
+    "tags": ["Scheduling", "Services"],
+    "includes": ["multi-tenancy", "calendar", "sms-reminders", "public-booking-page", "stripe"],
+    "available": true
+}

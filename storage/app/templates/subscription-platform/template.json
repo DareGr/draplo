@@ -1,0 +1,14 @@
+{
+    "name": "Subscription & Membership Platform",
+    "slug": "subscription-platform",
+    "category": "sales",
+    "description": "Plan management, recurring billing, usage tracking, and member portal for SaaS and membership businesses.",
+    "icon": "card_membership",
+    "complexity": "medium-high",
+    "models_count": 10,
+    "tags": [
+        "Billing",
+        "Members"
+    ],
+    "available": false
+}
