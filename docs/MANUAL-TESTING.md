@@ -92,21 +92,84 @@ php artisan horizon
 
 ## Test 2: Authentication
 
-### Dev-Mode Login (local development)
+### Option A: Dev-Mode Login (local development only)
+
+> Works only when `APP_ENV=local`. Quick way to test without GitHub OAuth configured.
 
 - [ ] Visit http://localhost:8000/dev/login — returns JSON with `token` and `user`
 - [ ] Copy token, add to localStorage: `localStorage.setItem('auth_token', 'TOKEN_HERE')`
 - [ ] Visit http://localhost:8000/templates — page loads without "Initializing..." stuck
+- [ ] Visit http://localhost:8000/api/auth/me (with token in header) — returns dev user
+- [ ] **Note:** Dev user is admin (`is_admin: true`) — can access /admin
 
-### GitHub OAuth (production flow)
+### Option B: GitHub OAuth (production flow)
 
-> Requires GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET configured
+> This is the ONLY auth method in production. Must be tested before deploying.
 
-- [ ] Visit http://localhost:8000/auth/github — redirects to GitHub authorization page
-- [ ] Authorize the app on GitHub
-- [ ] Redirected back to http://localhost:8000/auth/callback#token=...
-- [ ] Automatically redirected to /templates
-- [ ] Visit http://localhost:8000/api/auth/me (with token) — returns user with github_username
+**Setup (one-time):**
+1. Go to https://github.com/settings/developers → "New OAuth App"
+2. Application name: `Draplo` (or `Draplo Local` for testing)
+3. Homepage URL: `http://localhost:8000` (or your production domain)
+4. Authorization callback URL: `http://localhost:8000/auth/github/callback`
+5. Register → copy Client ID + generate Client Secret
+6. Add to `.env`:
+   ```env
+   GITHUB_CLIENT_ID=your-client-id
+   GITHUB_CLIENT_SECRET=your-client-secret
+   GITHUB_REDIRECT_URL=http://localhost:8000/auth/github/callback
+   ```
+7. Clear config: `php artisan config:clear`
+
+**Test flow:**
+
+- [ ] Visit http://localhost:8000 (landing page)
+- [ ] Click "Sign In" button in top navigation
+- [ ] Redirected to GitHub authorization page (`github.com/login/oauth/authorize?...`)
+- [ ] GitHub shows: "Draplo wants to access your account" with `repo` and `user:email` scopes
+- [ ] Click "Authorize"
+- [ ] Redirected to http://localhost:8000/auth/callback#token=...
+- [ ] Automatically redirected to /templates (or /dashboard if returning user)
+- [ ] Token stored in localStorage (check: browser DevTools → Application → Local Storage → `auth_token`)
+
+**Verify user creation:**
+
+- [ ] Visit http://localhost:8000/api/auth/me (add `Authorization: Bearer {token}` header)
+- [ ] Response contains: `name`, `email`, `github_id`, `github_username`, `avatar_url`, `plan: "free"`
+- [ ] Check database: `php artisan tinker --execute="echo App\Models\User::where('github_username', 'YOUR_USERNAME')->first()->toJson();"` — user exists with GitHub data
+
+**Test returning user (login again):**
+
+- [ ] Log out: clear localStorage (`localStorage.removeItem('auth_token')`)
+- [ ] Visit /auth/github again → GitHub skips authorization (already authorized) → instant redirect back
+- [ ] User is logged in, same account (not duplicated)
+- [ ] Token is refreshed (new token in localStorage)
+
+**Test token persistence:**
+
+- [ ] Close browser tab, open new tab → visit http://localhost:8000/templates
+- [ ] Still logged in (token persisted in localStorage)
+- [ ] Hard refresh (Ctrl+Shift+R) → still logged in
+
+**Test unauthorized access:**
+
+- [ ] Clear localStorage token
+- [ ] Visit http://localhost:8000/api/projects → 401 Unauthorized
+- [ ] Visit http://localhost:8000/api/auth/me → 401 Unauthorized
+- [ ] SPA shows "Initializing..." (dev mode auto-logs in, production would redirect to login)
+
+**Test dev-mode blocked in production:**
+
+- [ ] Set `APP_ENV=production` in `.env`
+- [ ] `php artisan config:clear`
+- [ ] Visit http://localhost:8000/dev/login → 403 Forbidden
+- [ ] Revert: set `APP_ENV=local`, `php artisan config:clear`
+
+### Auth Flow Summary
+
+```
+Production:  Landing Page → "Sign In" → GitHub OAuth → /auth/callback#token → SPA
+Local Dev:   SPA boot → ensureAuth() → /dev/login → auto-token → SPA
+```
 
 ---
 
@@ -534,12 +597,138 @@ npm run build
 
 ---
 
+## Test 14: Production Mode Full Flow
+
+> This tests the entire app as a real user would experience it in production — GitHub OAuth only, no dev-mode shortcuts.
+
+### Production Environment Setup
+
+```bash
+# Set production-like environment
+# In .env:
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=http://localhost:8000
+
+# Required keys:
+GITHUB_CLIENT_ID=your-client-id
+GITHUB_CLIENT_SECRET=your-client-secret
+GITHUB_REDIRECT_URL=http://localhost:8000/auth/github/callback
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-your-key
+
+# Build for production
+npm run build
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan migrate:fresh --seed
+```
+
+### Full Production User Journey
+
+**Step 1: Visit Landing Page**
+- [ ] Visit http://localhost:8000
+- [ ] Landing page loads with Three.js hero, all sections visible
+- [ ] No "dev" or "debug" artifacts visible
+
+**Step 2: Sign In via GitHub**
+- [ ] Click "Sign In" → GitHub OAuth page
+- [ ] Authorize → redirected back to Draplo
+- [ ] Lands on /dashboard (not /templates — dashboard is default for authenticated)
+- [ ] Dev login (`/dev/login`) returns 403 Forbidden
+
+**Step 3: Browse Templates**
+- [ ] Navigate to /templates via sidebar
+- [ ] 25 templates + Start from Scratch visible
+- [ ] Click "Booking Platform"
+
+**Step 4: Complete Wizard**
+- [ ] Step 1: Enter app name "MyBookingApp", customize description
+- [ ] Step 2: Verify roles pre-populated, adjust if needed
+- [ ] Step 3: Review 8 models, add a custom field
+- [ ] Step 4: Verify multi-tenancy ON
+- [ ] Step 5: Toggle integrations
+- [ ] Step 6: Review summary, click "Generate Scaffold"
+
+**Step 5: AI Generation**
+- [ ] "Generating..." spinner shown
+- [ ] `php artisan horizon` must be running in background
+- [ ] After 15-30s: redirected to Preview page
+- [ ] If using Gemini: switch in /admin first, then generate
+
+**Step 6: Preview Generated Files**
+- [ ] File tree shows 7+ generated files
+- [ ] Click through files — syntax highlighted
+- [ ] Edit a file → save → changes persist
+- [ ] Generation info panel shows correct provider, tokens, cost
+
+**Step 7: Export to GitHub**
+- [ ] Click Export dropdown → "Push to GitHub"
+- [ ] Enter repo name (or use default)
+- [ ] Click "Push" → progress overlay
+- [ ] "What's Next" card shows with repo URL
+- [ ] Visit GitHub → private repo exists with all files
+- [ ] Clone the repo → files match what was previewed
+
+**Step 8: Download ZIP (alternative)**
+- [ ] Click Export dropdown → "Download ZIP"
+- [ ] ZIP downloads with project slug filename
+- [ ] Extract → same files as in preview
+
+**Step 9: Deploy (if server available)**
+- [ ] Navigate to /projects/{id}/deploy
+- [ ] **Option A (Hetzner):** Enter API key → create server → wait → enter Coolify key → deploy
+- [ ] **Option B (Existing server):** Enter Coolify URL + key → connect → deploy
+- [ ] After deploy: live URL shown, app accessible
+
+**Step 10: Dashboard Verification**
+- [ ] Visit /dashboard
+- [ ] Stats reflect: 1 project, 1 generated, correct plan
+- [ ] Recent projects shows your project
+- [ ] Architect terminal shows generation log entry
+
+**Step 11: Admin (if admin user)**
+- [ ] Visit /admin
+- [ ] Stats show 1 user, 1 project, 1 generation, cost > 0
+- [ ] Change AI provider → save → verify persists on reload
+
+**Step 12: Settings**
+- [ ] Visit /settings
+- [ ] GitHub: shows connected with your username
+- [ ] Plan: shows "Free"
+- [ ] Profile: shows your GitHub name/email
+
+### Production Checklist
+
+- [ ] `/dev/login` is blocked (403)
+- [ ] All API endpoints require `Authorization: Bearer` token (except /api/templates and /api/config/flags)
+- [ ] No debug information in error responses
+- [ ] GitHub token is encrypted in database (`users.github_token` column is not plaintext)
+- [ ] Server API keys are encrypted (`server_connections.encrypted_api_key` is not plaintext)
+- [ ] CORS: SPA runs on same origin as API (no cross-origin issues in production)
+- [ ] Static assets served from `/build/` (Vite production build)
+- [ ] No console.log or debug output in browser console
+
+### Revert to Development Mode
+
+```bash
+# After production testing, revert:
+# In .env:
+APP_ENV=local
+APP_DEBUG=true
+
+php artisan config:clear
+```
+
+---
+
 ## Test Summary Checklist
 
 | Area | Tests | Status |
 |------|-------|--------|
 | Landing Page | 18 checks | [ ] |
-| Authentication | 6 checks | [ ] |
+| Authentication (dev + GitHub OAuth) | 20+ checks | [ ] |
 | Template Library | 11 checks | [ ] |
 | Wizard (6 steps) | 35+ checks | [ ] |
 | AI Generation | 8 checks | [ ] |
@@ -551,4 +740,5 @@ npm run build
 | Feature Flags | 5 checks | [ ] |
 | Project List | 10 checks | [ ] |
 | Automated Tests | 106+ tests | [ ] |
-| **TOTAL** | **~160 checks** | |
+| **Production Mode Full Flow** | **20+ checks** | [ ] |
+| **TOTAL** | **~200 checks** | |
