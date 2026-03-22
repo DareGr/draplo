@@ -4,19 +4,14 @@ import useProject, { STEPS, STEP_TITLES } from '../../hooks/useProject';
 import AppLayout from '../../components/AppLayout';
 import Button from '../../components/Button';
 import Toast from '../../components/Toast';
+import StepDescribe from './StepDescribe';
+import StepUsers from './StepUsers';
+import StepModels from './StepModels';
+import StepAuth from './StepAuth';
+import StepIntegrations from './StepIntegrations';
+import StepReview from './StepReview';
 
-// Step components will be imported later (Tasks 9-14)
-// For now, create placeholder components
-function PlaceholderStep({ stepName, stepData }) {
-    return (
-        <div className="p-8">
-            <h2 className="text-2xl font-bold text-white mb-4">{stepName}</h2>
-            <pre className="text-on-surface-variant font-mono text-xs bg-surface-container-lowest p-4 rounded-xl overflow-auto">
-                {JSON.stringify(stepData, null, 2)}
-            </pre>
-        </div>
-    );
-}
+const STEP_COMPONENTS = [StepDescribe, StepUsers, StepModels, StepAuth, StepIntegrations, StepReview];
 
 export default function WizardLayout() {
     const { projectId } = useParams();
@@ -95,8 +90,11 @@ export default function WizardLayout() {
 
     // Render the appropriate step component
     const renderStep = () => {
-        // Placeholder -- real step components will replace these in Tasks 9-14
-        return <PlaceholderStep stepName={STEP_TITLES[currentStep]} stepData={stepData} />;
+        const StepComponent = STEP_COMPONENTS[currentStep];
+        if (currentStep === 5) {
+            return <StepComponent ref={stepRef} stepData={stepData} project={project} onGoToStep={goToStep} />;
+        }
+        return <StepComponent ref={stepRef} stepData={stepData} />;
     };
 
     return (
