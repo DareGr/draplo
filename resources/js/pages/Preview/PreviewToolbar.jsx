@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../../components/Button';
 import ExportDropdown from './ExportDropdown';
 
-export default function PreviewToolbar({ filePath = '', editable = false, onToggleEdit, onRegenerate, projectId, projectSlug, onExportComplete }) {
+export default function PreviewToolbar({ filePath = '', editable = false, onToggleEdit, onRegenerate, projectId, projectSlug, projectStatus, onExportComplete }) {
     const pathParts = filePath ? filePath.split('/') : [];
 
     return (
@@ -57,6 +57,15 @@ export default function PreviewToolbar({ filePath = '', editable = false, onTogg
                     projectSlug={projectSlug}
                     onExportComplete={onExportComplete}
                 />
+                {(projectStatus === 'exported' || projectStatus === 'deployed') && (
+                    <Link
+                        to={`/projects/${projectId}/deploy`}
+                        className="bg-gradient-to-r from-tertiary-container to-tertiary text-on-tertiary font-bold rounded-md px-4 py-2 text-sm transition-all active:scale-95 inline-flex items-center gap-1.5"
+                    >
+                        <span className="material-symbols-outlined text-[18px]">rocket_launch</span>
+                        Deploy
+                    </Link>
+                )}
             </div>
         </div>
     );

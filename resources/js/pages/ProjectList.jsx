@@ -119,6 +119,14 @@ export default function ProjectList() {
                                                     Preview
                                                 </Link>
                                             )}
+                                            {(project.status === 'exported' || project.status === 'deployed') && (
+                                                <Link
+                                                    to={`/projects/${project.id}/deploy`}
+                                                    className="text-tertiary text-sm font-medium hover:text-tertiary-container transition-colors"
+                                                >
+                                                    {project.status === 'deployed' ? 'Manage' : 'Deploy'}
+                                                </Link>
+                                            )}
                                             <button
                                                 onClick={() => handleDelete(project)}
                                                 className="text-outline hover:text-error transition-colors"

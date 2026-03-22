@@ -6,6 +6,7 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import ProjectList from './pages/ProjectList';
 import WizardLayout from './pages/Wizard/WizardLayout';
 import PreviewLayout from './pages/Preview/PreviewLayout';
+import DeployPage from './pages/Deploy/DeployPage';
 import AuthCallback from './pages/AuthCallback';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/projects" element={<ProjectList />} />
             <Route path="/wizard/:projectId" element={<WizardLayout />} />
             <Route path="/projects/:projectId/preview" element={<PreviewLayout />} />
+            <Route path="/projects/:projectId/deploy" element={<DeployPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="*" element={<Navigate to="/templates" replace />} />
         </Routes>
