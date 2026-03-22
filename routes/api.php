@@ -9,9 +9,11 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\Wizard\WizardController;
+use App\Http\Controllers\ConfigController;
 use Illuminate\Support\Facades\Route;
 
 // Public
+Route::get('/config/flags', [ConfigController::class, 'flags']);
 Route::get('/templates', [TemplateController::class, 'index']);
 
 // Authenticated

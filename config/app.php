@@ -123,4 +123,23 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Feature Flags
+    |--------------------------------------------------------------------------
+    |
+    | These flags control which features are enabled in the application.
+    | Self-hosted users can disable any feature via .env configuration.
+    |
+    */
+
+    'flags' => [
+        'stripe' => env('STRIPE_ENABLED', true),
+        'coolify' => env('COOLIFY_ENABLED', true),
+        'github' => env('GITHUB_ENABLED', true),
+        'premium_templates' => env('PREMIUM_TEMPLATES_ENABLED', true),
+        'threejs_hero' => env('THREEJS_HERO_ENABLED', true),
+        'byos_hetzner' => env('BYOS_HETZNER_ENABLED', true),
+    ],
+
 ];
