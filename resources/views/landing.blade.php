@@ -549,5 +549,6 @@
         </div>
     </footer>
 
+    @vite(['resources/js/threejs-hero.js'])
 </body>
 </html>
