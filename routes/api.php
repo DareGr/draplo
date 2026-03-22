@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{project}/preview', [GenerationController::class, 'preview']);
     Route::get('/projects/{project}/preview/{filepath}', [GenerationController::class, 'previewFile'])
         ->where('filepath', '.*');
+    Route::put('/projects/{project}/preview/{filepath}', [GenerationController::class, 'updatePreviewFile'])
+        ->where('filepath', '.*');
 
     // Admin
     Route::middleware('admin')->prefix('admin')->group(function () {

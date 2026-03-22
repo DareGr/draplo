@@ -201,6 +201,64 @@ it('regenerate clears cache and dispatches job', function () {
     Queue::assertPushed(GenerateProjectJob::class);
 });
 
+it('updates a preview file content', function () {
+    $project = Project::factory()->create([
+        'user_id' => $this->user->id,
+        'status' => ProjectStatusEnum::Generated,
+        'generation_output' => [
+            ['path' => 'CLAUDE.md', 'content' => '# Original'],
+            ['path' => 'PROJECT.md', 'content' => '# Project'],
+        ],
+    ]);
+
+    $this->actingAs($this->user)
+        ->putJson("/api/projects/{$project->id}/preview/CLAUDE.md", [
+            'content' => '# Updated Content',
+        ])
+        ->assertOk()
+        ->assertJsonPath('path', 'CLAUDE.md')
+        ->assertJsonPath('content', '# Updated Content');
+
+    $project->refresh();
+    expect($project->generation_output[0]['content'])->toBe('# Updated Content');
+});
+
+it('returns 403 when updating another users preview file', function () {
+    $other = User::factory()->create();
+    $project = Project::factory()->create([
+        'user_id' => $other->id,
+        'status' => ProjectStatusEnum::Generated,
+        'generation_output' => [['path' => 'test.md', 'content' => 'x']],
+    ]);
+
+    $this->actingAs($this->user)
+        ->putJson("/api/projects/{$project->id}/preview/test.md", ['content' => 'hacked'])
+        ->assertForbidden();
+});
+
+it('returns 404 when updating preview of non-generated project', function () {
+    $project = Project::factory()->create([
+        'user_id' => $this->user->id,
+        'status' => ProjectStatusEnum::WizardDone,
+    ]);
+
+    $this->actingAs($this->user)
+        ->putJson("/api/projects/{$project->id}/preview/test.md", ['content' => 'x'])
+        ->assertNotFound();
+});
+
+it('returns 404 for non-existent preview file path', function () {
+    $project = Project::factory()->create([
+        'user_id' => $this->user->id,
+        'status' => ProjectStatusEnum::Generated,
+        'generation_output' => [['path' => 'CLAUDE.md', 'content' => '#']],
+    ]);
+
+    $this->actingAs($this->user)
+        ->putJson("/api/projects/{$project->id}/preview/nonexistent.md", ['content' => 'x'])
+        ->assertNotFound();
+});
+
 it('rate limits after 5 generations in an hour', function () {
     Queue::fake();
 

@@ -6,6 +6,7 @@ use App\Enums\ProjectStatusEnum;
 use App\Jobs\GenerateProjectJob;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class GenerationController extends Controller
 {
@@ -51,6 +52,8 @@ class GenerationController extends Controller
                     'provider' => $generation->provider,
                     'duration_ms' => $generation->duration_ms,
                     'cached' => $generation->cached,
+                    'cache_read_tokens' => $generation->cache_read_tokens,
+                    'created_at' => $generation->created_at?->toISOString(),
                 ];
             }
         }
@@ -108,5 +111,30 @@ class GenerationController extends Controller
         }
 
         return response()->json($file);
+    }
+
+    public function updatePreviewFile(Request $request, Project $project, string $filepath): JsonResponse
+    {
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if ($project->status !== ProjectStatusEnum::Generated) {
+            return response()->json(['message' => 'Project is not generated.'], 404);
+        }
+
+        $request->validate(['content' => 'required|string']);
+
+        $files = $project->generation_output;
+        $index = collect($files)->search(fn($f) => $f['path'] === $filepath);
+
+        if ($index === false) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
+
+        $files[$index]['content'] = $request->input('content');
+        $project->update(['generation_output' => $files]);
+
+        return response()->json($files[$index]);
     }
 }
