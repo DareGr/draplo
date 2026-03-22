@@ -6,6 +6,7 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import ProjectList from './pages/ProjectList';
 import WizardLayout from './pages/Wizard/WizardLayout';
 import PreviewLayout from './pages/Preview/PreviewLayout';
+import AuthCallback from './pages/AuthCallback';
 
 function App() {
     const [ready, setReady] = useState(false);
@@ -28,6 +29,7 @@ function App() {
             <Route path="/projects" element={<ProjectList />} />
             <Route path="/wizard/:projectId" element={<WizardLayout />} />
             <Route path="/projects/:projectId/preview" element={<PreviewLayout />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="*" element={<Navigate to="/templates" replace />} />
         </Routes>
     );

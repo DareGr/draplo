@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button';
+import ExportDropdown from './ExportDropdown';
 
-export default function PreviewToolbar({ filePath = '', editable = false, onToggleEdit, onRegenerate, projectId }) {
+export default function PreviewToolbar({ filePath = '', editable = false, onToggleEdit, onRegenerate, projectId, projectSlug, onExportComplete }) {
     const pathParts = filePath ? filePath.split('/') : [];
 
     return (
@@ -51,12 +52,11 @@ export default function PreviewToolbar({ filePath = '', editable = false, onTogg
                         Regenerate
                     </span>
                 </Button>
-                <Button variant="primary" disabled title="Coming in Phase 3B" className="text-sm">
-                    <span className="inline-flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[18px]">download</span>
-                        Export
-                    </span>
-                </Button>
+                <ExportDropdown
+                    projectId={projectId}
+                    projectSlug={projectSlug}
+                    onExportComplete={onExportComplete}
+                />
             </div>
         </div>
     );

@@ -9,6 +9,7 @@ import CodeViewer from './CodeViewer';
 import PreviewTabs from './PreviewTabs';
 import PreviewToolbar from './PreviewToolbar';
 import GenerationInfo from './GenerationInfo';
+import WhatNextCard from './WhatNextCard';
 
 const MAX_TABS = 5;
 
@@ -26,6 +27,7 @@ export default function PreviewLayout() {
     const [regenerating, setRegenerating] = useState(false);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState(null);
+    const [exportData, setExportData] = useState(null);
 
     const pollRef = useRef(null);
 
@@ -256,6 +258,14 @@ export default function PreviewLayout() {
         }
     }, [projectId]);
 
+    const handleExportComplete = useCallback((data) => {
+        setExportData(data);
+        setToast({ message: 'Exported to GitHub successfully', type: 'success' });
+    }, []);
+
+    // Derive project slug from generation data or project ID
+    const projectSlug = generation?.project_slug || generation?.slug || `project-${projectId}`;
+
     if (loading) {
         return (
             <AppLayout activePage="preview">
@@ -293,6 +303,8 @@ export default function PreviewLayout() {
                         onToggleEdit={() => setEditable(!editable)}
                         onRegenerate={handleRegenerate}
                         projectId={projectId}
+                        projectSlug={projectSlug}
+                        onExportComplete={handleExportComplete}
                     />
                     <PreviewTabs
                         tabs={openTabs}
@@ -344,6 +356,15 @@ export default function PreviewLayout() {
                         </p>
                     </div>
                 </div>
+            )}
+
+            {exportData && (
+                <WhatNextCard
+                    repoUrl={exportData.github_repo_url}
+                    repoName={exportData.github_repo_name}
+                    projectSlug={projectSlug}
+                    onClose={() => setExportData(null)}
+                />
             )}
 
             {toast && (
