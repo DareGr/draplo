@@ -58,11 +58,13 @@ class AiResponse
 - Uses `cache_control: { type: 'ephemeral' }` on system prompt blocks for Layer 1 + Layer 2 caching
 - Extracts token usage from response: `usage.input_tokens`, `usage.output_tokens`, `usage.cache_read_input_tokens`
 - Pricing: configurable per model, defaults for claude-sonnet-4-6: $3/$15 per MTok input/output, cache reads at 10% of input price
+- HTTP timeout: 120s, connect timeout: 10s
 
 ### GeminiProvider
 
 - Calls `https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent`
-- Auth: API key as query param `?key={key}`
+- Auth: API key as query param `?key={key}`. **Security note:** This is Google's documented auth method for the generativelanguage API. All calls are server-to-server over HTTPS — the key never reaches the client. API keys are never logged per project security policy. For additional security, self-hosters can use Vertex AI endpoint with OAuth2 service account bearer tokens instead.
+- HTTP timeout: 120s, connect timeout: 10s
 - System instruction sent via `systemInstruction` field
 - Context caching via `cachedContents` API (separate endpoint for creating cached content)
 - Extracts token usage from `usageMetadata`: `promptTokenCount`, `candidatesTokenCount`, `cachedContentTokenCount`
@@ -114,6 +116,12 @@ Added to `config/services.php`:
 ---
 
 ## 2. Settings System + Admin API
+
+### `generations` table update (new migration)
+
+Add columns to existing `generations` table:
+- `cache_read_tokens` INTEGER DEFAULT 0 — for cost auditing and cache effectiveness tracking
+- `provider` VARCHAR(50) NULLABLE — 'anthropic' or 'gemini', for filtering/reporting
 
 ### `settings` table migration
 
@@ -202,13 +210,13 @@ User message = Layer 3
 **Step 7 — Track cost:**
 - Create `Generation` record with:
   - `input_hash`, `prompt_tokens`, `completion_tokens`, `cost_usd`, `model`, `duration_ms`, `cached: false`
-- Cost calculation: provider-specific pricing from config
-  - Anthropic: `(input/1M * 3) + (output/1M * 15) - (cacheRead/1M * 3 * 0.9)`
-  - Gemini: `(input/1M * 1.25) + (output/1M * 10) - (cacheRead/1M * 1.25 * 0.9)`
+- Cost calculation: provider-specific pricing from config. Note: `input_tokens` from the API includes `cache_read_tokens` in the total.
+  - Anthropic: `((input - cacheRead)/1M * 3) + (cacheRead/1M * 0.30) + (output/1M * 15)`
+  - Gemini: `((input - cacheRead)/1M * 1.25) + (cacheRead/1M * 0.125) + (output/1M * 10)`
 
 ### GenerateProjectJob
 
-Queued job:
+Queued job (`$timeout = 180`, `$tries = 1`):
 1. Set project status to `generating`
 2. Call `GenerationService->generate(project)`
 3. On success: status already set to `generated` by service
@@ -218,8 +226,9 @@ Queued job:
 ### Rate Limiting
 
 `RateLimitGeneration` middleware:
-- Count generations where `project.user_id = auth.id AND generations.created_at > now() - 1 hour`
-- If count >= `SettingsService->get('generation_rate_limit', 5)`: return 429 with `Retry-After` header
+- Count completed generations: `generations WHERE project.user_id = auth.id AND created_at > now() - 1 hour`
+- Count in-flight jobs: `projects WHERE user_id = auth.id AND status = 'generating'`
+- Total = completed + in-flight. If total >= `SettingsService->get('generation_rate_limit', 5)`: return 429 with `Retry-After` header
 - Applied to `POST /projects/{id}/generate` and `POST /projects/{id}/regenerate`
 
 ---
@@ -297,7 +306,7 @@ Notes: {step_integrations.notes}
 - Regex: `/<file\s+path="([^"]+)">([\s\S]*?)<\/file>/g`
 - Trims whitespace from content
 - Returns `array<['path' => string, 'content' => string]>`
-- Edge cases: content containing `</file>` literally (unlikely but handled by greedy matching), empty files (valid, stored as empty string)
+- Edge cases: content containing literal `</file>` is a known limitation of non-greedy matching (extremely unlikely in practice since AI output won't contain this exact tag). Empty files are valid and stored as empty string.
 
 ### Validation (post-parse)
 
@@ -368,7 +377,7 @@ Under `auth:sanctum` + `admin` middleware.
 - Input: `{ description: string }`
 - Calls AI with `model-suggestion.md` prompt + user's description
 - Returns: `{ models: [{name, description, fields: [{name, type}]}] }`
-- No rate limiting (lightweight prompt, fast response)
+- Rate limited: 20/minute per user (standard API throttle — lightweight but not unlimited)
 - Uses same AiProviderFactory to resolve active provider
 
 ### Routes
@@ -459,15 +468,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 ```
 app/
-├── Contracts/
-│   └── AiProviderInterface.php
-├── ValueObjects/
-│   └── AiResponse.php
-├── Providers/
-│   ├── AnthropicProvider.php
-│   └── GeminiProvider.php
-├── Factories/
-│   └── AiProviderFactory.php
+├── Services/
+│   ├── AI/
+│   │   ├── AiProviderInterface.php
+│   │   ├── AiResponse.php
+│   │   ├── AiProviderFactory.php
+│   │   ├── AnthropicProvider.php
+│   │   └── GeminiProvider.php
 ├── Services/
 │   ├── GenerationService.php
 │   ├── OutputParserService.php
@@ -530,3 +537,5 @@ database/seeders/DevUserSeeder.php  — set is_admin: true
 - Stripe payment gates (Phase 3)
 - GitHub export / ZIP download (Phase 3)
 - OpenAI or other AI providers (future — interface supports it)
+- Admin endpoints: GET /api/admin/users, GET /api/admin/generations, PUT /api/admin/prompt, GET /api/admin/coolify/health (Phase 5 admin panel)
+- Gemini cached content TTL management and storage billing (defer to implementation — document approach then)
