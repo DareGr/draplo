@@ -5,6 +5,7 @@ import { ensureAuth } from './api';
 import TemplateLibrary from './pages/TemplateLibrary';
 import ProjectList from './pages/ProjectList';
 import WizardLayout from './pages/Wizard/WizardLayout';
+import PreviewLayout from './pages/Preview/PreviewLayout';
 
 function App() {
     const [ready, setReady] = useState(false);
@@ -26,6 +27,7 @@ function App() {
             <Route path="/templates" element={<TemplateLibrary />} />
             <Route path="/projects" element={<ProjectList />} />
             <Route path="/wizard/:projectId" element={<WizardLayout />} />
+            <Route path="/projects/:projectId/preview" element={<PreviewLayout />} />
             <Route path="*" element={<Navigate to="/templates" replace />} />
         </Routes>
     );

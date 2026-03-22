@@ -1,4 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 
@@ -188,6 +190,8 @@ const SECTION_RENDERERS = {
 };
 
 const StepReview = forwardRef(function StepReview({ stepData, project, onGoToStep }, ref) {
+    const navigate = useNavigate();
+    const [generating, setGenerating] = useState(false);
     const [expanded, setExpanded] = useState(
         SECTIONS.reduce((acc, s) => ({ ...acc, [s.key]: true }), {})
     );
@@ -195,6 +199,31 @@ const StepReview = forwardRef(function StepReview({ stepData, project, onGoToSte
     useImperativeHandle(ref, () => ({
         getData: () => ({}),
     }));
+
+    const handleGenerate = async () => {
+        setGenerating(true);
+        try {
+            await api.post(`/projects/${project.id}/generate`);
+            // Poll for completion
+            const poll = setInterval(async () => {
+                try {
+                    const { data } = await api.get(`/projects/${project.id}/generation`);
+                    if (data.status === 'generated') {
+                        clearInterval(poll);
+                        navigate(`/projects/${project.id}/preview`);
+                    } else if (data.status === 'failed') {
+                        clearInterval(poll);
+                        setGenerating(false);
+                    }
+                } catch {
+                    clearInterval(poll);
+                    setGenerating(false);
+                }
+            }, 2000);
+        } catch {
+            setGenerating(false);
+        }
+    };
 
     const toggleSection = (key) => {
         setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -230,13 +259,16 @@ const StepReview = forwardRef(function StepReview({ stepData, project, onGoToSte
 
             {/* Generate button */}
             <div className="mt-10 text-center">
-                <Button variant="primary" className="opacity-50 cursor-not-allowed px-12 py-3" disabled>
+                <Button
+                    variant="primary"
+                    className="px-12 py-3"
+                    onClick={handleGenerate}
+                    loading={generating}
+                    disabled={generating}
+                >
                     <span className="material-symbols-outlined mr-2">rocket_launch</span>
-                    Generate Scaffold
+                    {generating ? 'Generating...' : 'Generate Scaffold'}
                 </Button>
-                <p className="text-on-surface-variant text-xs mt-3 font-mono">
-                    AI generation coming in Phase 2
-                </p>
             </div>
         </div>
     );

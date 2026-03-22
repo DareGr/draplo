@@ -111,6 +111,14 @@ export default function ProjectList() {
                                                     Resume
                                                 </Link>
                                             )}
+                                            {project.status === 'generated' && (
+                                                <Link
+                                                    to={`/projects/${project.id}/preview`}
+                                                    className="text-secondary text-sm font-medium hover:text-secondary-container transition-colors"
+                                                >
+                                                    Preview
+                                                </Link>
+                                            )}
                                             <button
                                                 onClick={() => handleDelete(project)}
                                                 className="text-outline hover:text-error transition-colors"
