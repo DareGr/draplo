@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\DeployController;
 use App\Http\Controllers\Export\GitHubExportController;
 use App\Http\Controllers\Export\ZipExportController;
 use App\Http\Controllers\GenerationController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ServerController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\Wizard\WizardController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +48,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/projects/{project}/export/github', [GitHubExportController::class, 'export']);
     Route::get('/projects/{project}/export/status', [GitHubExportController::class, 'status']);
     Route::get('/projects/{project}/export/zip', [ZipExportController::class, 'download']);
+
+    // Servers
+    Route::get('/servers', [ServerController::class, 'index']);
+    Route::post('/servers', [ServerController::class, 'store']);
+    Route::get('/servers/{server}', [ServerController::class, 'show']);
+    Route::delete('/servers/{server}', [ServerController::class, 'destroy']);
+    Route::get('/servers/{server}/health', [ServerController::class, 'health']);
+
+    // Deploy
+    Route::post('/projects/{project}/deploy', [DeployController::class, 'deploy']);
+    Route::get('/projects/{project}/deploy/status', [DeployController::class, 'status']);
+    Route::delete('/projects/{project}/deploy', [DeployController::class, 'teardown']);
 
     // Admin
     Route::middleware('admin')->prefix('admin')->group(function () {

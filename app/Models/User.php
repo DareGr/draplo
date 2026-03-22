@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    public function serverConnections(): HasMany
+    {
+        return $this->hasMany(ServerConnection::class);
+    }
+
     public function isFree(): bool
     {
         return $this->plan === UserPlanEnum::Free;
