@@ -1,0 +1,108 @@
+<?php
+
+use App\Services\OutputParserService;
+
+beforeEach(function () {
+    $this->parser = new OutputParserService();
+});
+
+it('parses valid XML output into file array', function () {
+    $content = '<file path="CLAUDE.md"># Project Context</file><file path="PROJECT.md">## Overview</file>';
+    $files = $this->parser->parse($content);
+
+    expect($files)->toHaveCount(2);
+    expect($files[0]['path'])->toBe('CLAUDE.md');
+    expect($files[0]['content'])->toBe('# Project Context');
+    expect($files[1]['path'])->toBe('PROJECT.md');
+});
+
+it('handles PHP code with angle brackets in content', function () {
+    $content = '<file path="database/migrations/create_users.php"><?php
+use Illuminate\Database\Schema\Blueprint;
+Schema::create(\'users\', function (Blueprint $table) {
+    $table->id();
+    if ($table->hasColumn(\'name\')) { /* noop */ }
+});
+</file>';
+
+    $files = $this->parser->parse($content);
+
+    expect($files)->toHaveCount(1);
+    expect($files[0]['content'])->toContain('Schema::create');
+    expect($files[0]['content'])->toContain('$table->id()');
+});
+
+it('returns empty array for malformed input', function () {
+    expect($this->parser->parse('no xml tags here'))->toBe([]);
+    expect($this->parser->parse(''))->toBe([]);
+});
+
+it('trims whitespace from content', function () {
+    $content = '<file path="test.md">
+    content with leading whitespace
+    </file>';
+
+    $files = $this->parser->parse($content);
+    expect($files[0]['content'])->toBe('content with leading whitespace');
+});
+
+it('validates required files are present', function () {
+    $files = [
+        ['path' => 'CLAUDE.md', 'content' => '# Context'],
+        ['path' => 'PROJECT.md', 'content' => '# Project'],
+    ];
+
+    $errors = $this->parser->validate($files);
+    expect($errors)->not->toBeEmpty();
+    expect(collect($errors)->filter(fn($e) => str_contains($e, 'todo.md')))->not->toBeEmpty();
+});
+
+it('validates migration files contain Schema::create', function () {
+    $files = [
+        ['path' => 'database/migrations/2026_create_users.php', 'content' => '<?php echo "bad";'],
+    ];
+
+    $errors = $this->parser->validate($files);
+    expect(collect($errors)->filter(fn($e) => str_contains($e, 'Schema::create')))->not->toBeEmpty();
+});
+
+it('passes validation with all required files', function () {
+    $files = [
+        ['path' => 'CLAUDE.md', 'content' => '# Context'],
+        ['path' => 'PROJECT.md', 'content' => '# Project'],
+        ['path' => 'todo.md', 'content' => '- [ ] Task 1'],
+        ['path' => '.claude-reference/architecture.md', 'content' => '# Arch'],
+        ['path' => '.claude-reference/constants.md', 'content' => '# Const'],
+        ['path' => '.claude-reference/patterns.md', 'content' => '# Patterns'],
+        ['path' => '.claude-reference/decisions.md', 'content' => '# Decisions'],
+    ];
+
+    $errors = $this->parser->validate($files);
+    expect($errors)->toBe([]);
+});
+
+it('rejects files over 50KB', function () {
+    $files = [
+        ['path' => 'huge.md', 'content' => str_repeat('x', 51 * 1024)],
+    ];
+
+    $errors = $this->parser->validate($files);
+    expect(collect($errors)->filter(fn($e) => str_contains($e, '50KB')))->not->toBeEmpty();
+});
+
+it('parses the full sample fixture', function () {
+    $fixturePath = base_path('tests/fixtures/sample-generation-output.xml');
+    if (!file_exists($fixturePath)) {
+        $this->markTestSkipped('Fixture file not found');
+    }
+
+    $content = file_get_contents($fixturePath);
+    $files = $this->parser->parse($content);
+
+    expect($files)->not->toBeEmpty();
+    expect(count($files))->toBeGreaterThanOrEqual(7);
+
+    // Validate the fixture passes validation
+    $errors = $this->parser->validate($files);
+    expect($errors)->toBe([]);
+});
