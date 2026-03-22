@@ -35,4 +35,18 @@ return [
         ],
     ],
 
+    'ai' => [
+        'provider' => env('AI_PROVIDER', 'anthropic'),
+        'model' => env('AI_MODEL', 'claude-sonnet-4-6'),
+        'max_tokens' => (int) env('AI_MAX_TOKENS', 16000),
+    ],
+
+    'anthropic' => [
+        'api_key' => env('ANTHROPIC_API_KEY'),
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];
