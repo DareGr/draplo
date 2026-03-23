@@ -45,7 +45,6 @@ export default function Settings() {
         );
     }
 
-    const planLabel = user?.plan || 'free';
     const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : '?';
 
     return (
@@ -93,21 +92,23 @@ export default function Settings() {
                     </div>
                 </div>
 
-                {/* Plan Card */}
+                {/* Community Card */}
                 <div className="bg-surface-container rounded-xl p-5 border border-outline-variant/5">
                     <div className="flex items-center gap-2 mb-3">
-                        <span className="material-symbols-outlined text-primary text-xl">credit_card</span>
-                        <h3 className="text-on-surface font-bold">Plan</h3>
+                        <span className="material-symbols-outlined text-primary text-xl">favorite</span>
+                        <h3 className="text-on-surface font-bold">Community</h3>
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 bg-primary/15 text-primary rounded text-sm font-bold font-mono capitalize">
-                        {planLabel}
+                    <span className="inline-flex items-center px-3 py-1 bg-primary/15 text-primary rounded text-sm font-bold font-mono">
+                        Open Source — Free forever
                     </span>
                     <div className="mt-3">
                         <a
-                            href="/#pricing"
+                            href={window.__draplo?.donateUrl || 'https://buymeacoffee.com/darko'}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-primary text-sm font-medium hover:underline"
                         >
-                            View Pricing
+                            Buy Me a Coffee
                         </a>
                     </div>
                 </div>
