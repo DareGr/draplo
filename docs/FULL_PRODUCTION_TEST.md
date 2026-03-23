@@ -61,10 +61,9 @@ REVERB_APP_ID=draplo
 REVERB_APP_KEY=<generate-random-key>
 REVERB_APP_SECRET=<generate-random-secret>
 
-STRIPE_ENABLED=false
 COOLIFY_ENABLED=true
 GITHUB_ENABLED=true
-PREMIUM_TEMPLATES_ENABLED=true
+TEMPLATES_ENABLED=true
 THREEJS_HERO_ENABLED=true
 BYOS_HETZNER_ENABLED=true
 ```
@@ -194,14 +193,15 @@ docker compose -f docker-compose.prod.yml down -v
 - [ ] Terminal card on right showing `.claude-reference/` folder structure
 - [ ] Description text on left
 
-### 2.8 Pricing Section
+### 2.8 Community Section ("Completely Free. Forever.")
 
-- [ ] 3 tier cards:
-  - Free ($0) — "AI generation + preview"
-  - Pro ($29 one-time) — "GitHub export + ZIP download"
-  - Pro+ ($12/mo) — "Premium templates + BYOS deploy"
-- [ ] Pro card has highlighted border
-- [ ] CTA buttons present (informational since Stripe is disabled)
+- [ ] "Completely Free. Forever." heading visible
+- [ ] 3 feature cards displayed:
+  - AI Generation — describes AI scaffold generation
+  - Full Export — GitHub export + ZIP download
+  - BYOS Deploy — deploy to your own server
+- [ ] "Buy Me a Coffee" button visible and links to external donation page
+- [ ] "Star on GitHub" button visible and links to GitHub repo
 
 ### 2.9 Open Source Section
 
@@ -232,7 +232,7 @@ docker compose -f docker-compose.prod.yml down -v
 - [ ] No horizontal scroll
 - [ ] Hero text scales down, CTAs stack vertically
 - [ ] Template cards stack to single column
-- [ ] Pricing cards stack to single column
+- [ ] Community feature cards stack to single column
 - [ ] Footer links wrap properly
 
 ---
@@ -842,7 +842,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 - [ ] **Total Projects:** shows number matching your actual projects (e.g., 1 or 2)
 - [ ] **Deployed:** count of projects with "deployed" status
 - [ ] **Generated:** count of projects that have been generated
-- [ ] **Plan:** shows "Free" badge
+- [ ] **Community:** shows "Open Source" badge
 - [ ] Each card: large number in monospace, label below, Material Symbol icon
 
 ### 10.2 Recent Projects
@@ -874,10 +874,10 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 - [ ] GitHub username: your @username
 - [ ] All fields are read-only
 
-### 11.2 Plan
+### 11.2 Community
 
-- [ ] Shows "Free" plan badge
-- [ ] "View Pricing" link → scrolls to landing page pricing section
+- [ ] Shows "Open Source — Free forever" badge
+- [ ] "Buy Me a Coffee" link visible and links to external donation page
 
 ### 11.3 GitHub Connection
 
@@ -982,13 +982,12 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ### 14.1 API Test
 
 - [ ] Visit `https://draplo.com/api/config/flags`
-- [ ] Returns JSON with all 6 flags as booleans:
+- [ ] Returns JSON with all 5 flags as booleans:
   ```json
   {
-    "stripe_enabled": false,
     "coolify_enabled": true,
     "github_enabled": true,
-    "premium_templates_enabled": true,
+    "templates_enabled": true,
     "threejs_hero_enabled": true,
     "byos_hetzner_enabled": true
   }
