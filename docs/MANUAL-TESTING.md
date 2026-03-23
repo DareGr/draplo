@@ -35,10 +35,9 @@ GITHUB_CLIENT_SECRET=your-client-secret
 GITHUB_REDIRECT_URL=http://localhost:8000/auth/github/callback
 
 # Feature Flags (all true by default):
-STRIPE_ENABLED=true
 COOLIFY_ENABLED=true
 GITHUB_ENABLED=true
-PREMIUM_TEMPLATES_ENABLED=true
+TEMPLATES_ENABLED=true
 THREEJS_HERO_ENABLED=true
 BYOS_HETZNER_ENABLED=true
 ```
@@ -79,7 +78,7 @@ php artisan horizon
 - [ ] **Featured Blueprints:** 6 template cards rendered correctly
 - [ ] "See All 25 Templates" link works
 - [ ] **Agent-Ready Section:** terminal card shows .claude-reference/ folder structure
-- [ ] **Pricing:** 3 tiers displayed (Free, Pro, Pro+)
+- [ ] **Support:** Donation CTA and GitHub stars section displayed
 - [ ] **Open Source Section:** AGPL-3.0 text, GitHub CTA
 - [ ] **Footer:** copyright, navigation links
 - [ ] **SEO:** View page source — check `<title>`, `<meta description>`, `og:` tags present

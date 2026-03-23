@@ -16,10 +16,11 @@
 │  │ Auth     │  │ AI Service│  │ Service  │  │ Service   │  │
 │  └──────────┘  └───────────┘  └──────────┘  └───────────┘  │
 │                                              ┌───────────┐  │
-│  ┌──────────┐  ┌───────────┐  ┌──────────┐  │ Provider  │  │
-│  │ Reverb   │  │ Horizon   │  │ Stripe   │  │ APIs      │  │
-│  │ WebSocket│  │ Queue     │  │ Payment  │  │ (H/DO/L/V)│  │
-│  └──────────┘  └───────────┘  └──────────┘  └───────────┘  │
+│  ┌──────────┐  ┌───────────┐  ┌───────────┐               │
+│  │ Reverb   │  │ Horizon   │  │ Provider  │               │
+│  │ WebSocket│  │ Queue     │  │ APIs      │               │
+│  └──────────┘  └───────────┘  │ (H/DO/L/V)│               │
+│                                └───────────┘               │
 ├─────────────────────────────────────────────────────────────┤
 │  PostgreSQL 16  │  Redis (queue + cache + sessions)          │
 └─────────────────────────────────────────────────────────────┘
@@ -49,9 +50,6 @@
 | github_token        | TEXT          | Encrypted, for repo creation       |
 | github_username     | VARCHAR(100)  |                                    |
 | avatar_url          | VARCHAR(500)  |                                    |
-| stripe_customer_id  | VARCHAR(100)  |                                    |
-| plan                | VARCHAR(50)   | 'free', 'paid', 'subscriber'      |
-| paid_at             | TIMESTAMP     | When one-time payment was made     |
 | generation_count    | INTEGER       | Default: 0                         |
 | created_at          | TIMESTAMP     |                                    |
 | updated_at          | TIMESTAMP     |                                    |
@@ -95,16 +93,6 @@
 | model               | VARCHAR(100)  | "claude-sonnet-4-6"               |
 | duration_ms         | INTEGER       | API call duration                  |
 | cached              | BOOLEAN       | Whether cache hit was used         |
-| created_at          | TIMESTAMP     |                                    |
-
-### stripe_events
-| Column              | Type          | Notes                              |
-|---------------------|---------------|------------------------------------|
-| id                  | BIGSERIAL PK  |                                    |
-| stripe_event_id     | VARCHAR(255)  | UNIQUE                             |
-| type                | VARCHAR(100)  | "checkout.session.completed" etc   |
-| payload             | JSONB         |                                    |
-| processed_at        | TIMESTAMP     |                                    |
 | created_at          | TIMESTAMP     |                                    |
 
 ### server_connections
@@ -157,24 +145,24 @@
 ### Export
 | Method | Endpoint                              | Description                | Auth   |
 |--------|---------------------------------------|----------------------------|--------|
-| POST   | /api/projects/{id}/export/github      | Push to GitHub repo        | Paid   |
-| GET    | /api/projects/{id}/export/zip         | Download as ZIP            | Paid   |
-| GET    | /api/projects/{id}/export/status      | GitHub push status         | Paid   |
+| POST   | /api/projects/{id}/export/github      | Push to GitHub repo        | Yes    |
+| GET    | /api/projects/{id}/export/zip         | Download as ZIP            | Yes    |
+| GET    | /api/projects/{id}/export/status      | GitHub push status         | Yes    |
 
 ### Deploy (BYOS — Bring Your Own Server)
 | Method | Endpoint                              | Description                        | Auth        |
 |--------|---------------------------------------|------------------------------------|-------------|
-| GET    | /api/servers                          | List user's server connections     | Pro+        |
-| POST   | /api/servers                          | Add server (provider + API key)    | Pro+        |
-| DELETE | /api/servers/{id}                     | Remove server connection           | Pro+        |
-| GET    | /api/servers/{id}/health              | Server health check                | Pro+        |
-| POST   | /api/servers/{id}/provision           | Provision VPS + install Coolify    | Pro+        |
-| GET    | /api/servers/{id}/provision/status    | Provisioning progress              | Pro+        |
-| POST   | /api/projects/{id}/deploy             | Deploy to user's server            | Pro+        |
-| GET    | /api/projects/{id}/deploy/status      | Deploy progress                    | Pro+        |
-| POST   | /api/projects/{id}/deploy/redeploy    | Force redeploy                     | Pro+        |
-| PUT    | /api/projects/{id}/deploy/domain      | Set custom domain                  | Pro+        |
-| DELETE | /api/projects/{id}/deploy             | Tear down deployment               | Pro+        |
+| GET    | /api/servers                          | List user's server connections     | Yes         |
+| POST   | /api/servers                          | Add server (provider + API key)    | Yes         |
+| DELETE | /api/servers/{id}                     | Remove server connection           | Yes         |
+| GET    | /api/servers/{id}/health              | Server health check                | Yes         |
+| POST   | /api/servers/{id}/provision           | Provision VPS + install Coolify    | Yes         |
+| GET    | /api/servers/{id}/provision/status    | Provisioning progress              | Yes         |
+| POST   | /api/projects/{id}/deploy             | Deploy to user's server            | Yes         |
+| GET    | /api/projects/{id}/deploy/status      | Deploy progress                    | Yes         |
+| POST   | /api/projects/{id}/deploy/redeploy    | Force redeploy                     | Yes         |
+| PUT    | /api/projects/{id}/deploy/domain      | Set custom domain                  | Yes         |
+| DELETE | /api/projects/{id}/deploy             | Tear down deployment               | Yes         |
 
 ### Dashboard
 | Method | Endpoint                    | Description                    | Auth   |
@@ -182,17 +170,6 @@
 | GET    | /api/projects               | List user's projects           | Yes    |
 | DELETE | /api/projects/{id}          | Delete project                 | Yes    |
 | GET    | /api/account                | Account details + usage stats  | Yes    |
-| GET    | /api/account/billing        | Stripe billing portal URL      | Paid   |
-
-### Payments (Stripe)
-| Method | Endpoint                          | Description                    | Auth   |
-|--------|-----------------------------------|--------------------------------|--------|
-| POST   | /api/checkout/one-time            | Create Stripe checkout session | Yes    |
-| POST   | /api/checkout/subscribe           | Create subscription checkout   | Yes    |
-| POST   | /api/webhooks/stripe              | Stripe webhook handler         | No*    |
-
-*Verified via Stripe signature
-
 ### Admin
 | Method | Endpoint                    | Description                    | Auth   |
 |--------|-----------------------------|--------------------------------|--------|
@@ -240,14 +217,9 @@ draplo/
 │   │   │   │   └── CoolifyDeployController.php
 │   │   │   ├── Dashboard/
 │   │   │   │   └── ProjectController.php
-│   │   │   ├── Payment/
-│   │   │   │   ├── CheckoutController.php
-│   │   │   │   └── StripeWebhookController.php
 │   │   │   └── Admin/
 │   │   │       └── AdminController.php
 │   │   ├── Middleware/
-│   │   │   ├── EnsurePaid.php
-│   │   │   ├── EnsureSubscriber.php
 │   │   │   └── RateLimitGeneration.php
 │   │   └── Requests/
 │   │       ├── UpdateWizardRequest.php
@@ -256,7 +228,6 @@ draplo/
 │   │   ├── User.php
 │   │   ├── Project.php
 │   │   ├── Generation.php
-│   │   └── StripeEvent.php
 │   ├── Services/
 │   │   ├── AnthropicService.php      ← Claude API wrapper with caching
 │   │   ├── GenerationService.php     ← Orchestrates full generation flow
@@ -264,7 +235,6 @@ draplo/
 │   │   ├── GitHubService.php         ← Repo creation + file push
 │   │   ├── CoolifyService.php        ← Deploy, DB provision, SSL
 │   │   ├── SkeletonService.php       ← Merges static skeleton with AI output
-│   │   └── StripeService.php         ← Payment session creation
 │   ├── Jobs/
 │   │   ├── GenerateProjectJob.php    ← Queued AI generation
 │   │   ├── PushToGitHubJob.php       ← Queued repo creation + push
@@ -306,7 +276,6 @@ draplo/
 │       │   └── components/
 │       │       ├── WizardProgress.jsx
 │       │       ├── ModelSuggester.jsx
-│       │       ├── PaymentGate.jsx
 │       │       └── DeployButton.jsx
 ├── routes/
 │   ├── api.php
@@ -330,5 +299,5 @@ draplo/
 │       ├── OutputParserServiceTest.php
 │       └── SkeletonServiceTest.php
 └── config/
-    └── services.php                  ← Anthropic, GitHub, Coolify, Stripe keys
+    └── services.php                  ← Anthropic, GitHub, Coolify keys
 ```

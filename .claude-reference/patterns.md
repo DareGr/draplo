@@ -253,40 +253,6 @@ class BYOSDeployService
 - API keys are NEVER shown in UI after initial entry (masked: `hc1_****...****7f3a`)
 - Server connections can be deleted — this removes the encrypted key from our database
 
-## Payment Gate Middleware (Updated for Pro/Pro+)
-
-```php
-// app/Http/Middleware/EnsureUserIsPro.php
-class EnsureUserIsPro
-{
-    public function handle(Request $request, Closure $next)
-    {
-        if (!$request->user()->stripe_one_time_payment_at) {
-            return response()->json([
-                'error' => 'Pro plan required',
-                'checkout_url' => route('checkout.pro'),
-            ], 402);
-        }
-        return $next($request);
-    }
-}
-
-// app/Http/Middleware/EnsureUserIsProPlus.php
-class EnsureUserIsProPlus
-{
-    public function handle(Request $request, Closure $next)
-    {
-        if (!$request->user()->hasActiveSubscription('pro_plus')) {
-            return response()->json([
-                'error' => 'Pro+ subscription required',
-                'checkout_url' => route('checkout.pro-plus'),
-            ], 402);
-        }
-        return $next($request);
-    }
-}
-```
-
 ## Wizard Data Structure (JSON)
 
 ```json

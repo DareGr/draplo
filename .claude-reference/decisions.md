@@ -27,11 +27,6 @@
 **Reason:** Coolify provides a UI for the user (they can manage their server visually after Draplo sets it up), handles SSL via Let's Encrypt, supports auto-deploy on git push, and has a comprehensive REST API. Raw Docker deploy would require us to build all of that ourselves.
 **Trade-off:** Dependency on Coolify project continuing development. But it's open source — worst case, the installed version keeps working.
 
-### Why one-time payment + optional subscription instead of pure subscription?
-**Decision:** $29 one-time for export, $12/mo for premium templates + BYOS deploy
-**Reason:** Developers hate subscriptions for tools they use occasionally. A one-time payment removes the "am I getting value this month?" anxiety. Subscription makes sense for premium templates (new ones added monthly = ongoing value) and BYOS deploy (infrastructure automation = ongoing service). Separating the two means users who just want the scaffold (majority) pay once, and power users pay monthly.
-**Trade-off:** Lower recurring revenue initially, but higher conversion rate on the one-time purchase.
-
 ### Why queue AI generation instead of synchronous?
 **Decision:** Generation runs as a queued job (GenerateProjectJob)
 **Reason:** Claude API calls take 15-30 seconds for 15K output tokens. Synchronous HTTP requests would time out. Queued jobs let us show a "Generating..." progress UI while the job runs in the background, and retry on API failures.
@@ -63,8 +58,8 @@
 **Trade-off:** Some companies avoid AGPL software due to legal caution. But our target (indie developers, small teams) doesn't care about this.
 
 ### Feature flags for flexible deployment
-**Decision:** All major features (Stripe, Coolify, GitHub, premium prompts) are behind .env feature flags
-**Reason:** Self-hosters may not want Stripe (personal use), may not have Coolify (generate-only mode), or may prefer ZIP over GitHub. Feature flags let the same codebase serve both our cloud and any self-hosted instance without code forks.
+**Decision:** All major features (Coolify, GitHub, templates) are behind .env feature flags
+**Reason:** Self-hosters may not have Coolify (generate-only mode), or may prefer ZIP over GitHub. Feature flags let the same codebase serve any self-hosted instance without code forks.
 **Trade-off:** More conditional logic in controllers and views, but worth the flexibility.
 
 ## Gotchas
@@ -87,5 +82,3 @@ Garbage in = garbage out. If wizard data has empty model names, duplicate field 
 ### ZIP download must exclude .git directory
 When generating ZIP for download, never include `.git/` — it would contain our skeleton's git history. Generate a clean ZIP with only the project files.
 
-### Stripe webhook idempotency
-Stripe can send the same webhook multiple times. Use `stripe_events` table with unique `stripe_event_id` to ensure we don't process the same event twice (especially payment success → upgrade user plan).
