@@ -1,5 +1,9 @@
 # Draplo — Your next SaaS, architected by AI
 
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-yellow?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/darko)
+[![GitHub Stars](https://img.shields.io/github/stars/DareGr/draplo?style=social)](https://github.com/DareGr/draplo)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 > Draft it. Deploy it. Open source.
 
 Draplo is an open-source platform where developers describe their SaaS idea through a guided wizard, and AI generates a complete, deployment-ready Laravel project scaffold optimized for AI coding agents (Claude Code, Cursor, Aider).
@@ -68,14 +72,13 @@ All features can be enabled/disabled via `.env`:
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `STRIPE_ENABLED` | `true` | Enable Stripe payments (not implemented yet) |
 | `COOLIFY_ENABLED` | `true` | Enable BYOS deploy features |
 | `GITHUB_ENABLED` | `true` | Enable GitHub OAuth + export |
-| `PREMIUM_TEMPLATES_ENABLED` | `true` | Enable premium template access |
+| `TEMPLATES_ENABLED` | `true` | Enable template access |
 | `THREEJS_HERO_ENABLED` | `true` | Enable Three.js 3D hero on landing |
 | `BYOS_HETZNER_ENABLED` | `true` | Enable Hetzner auto-provisioning |
-
-Disabling `STRIPE_ENABLED` makes all features free (perfect for self-hosting).
+| `DONATE_URL` | `https://buymeacoffee.com/darko` | Donation link shown in UI |
+| `GITHUB_REPO_URL` | `https://github.com/DareGr/draplo` | GitHub repo link shown in UI |
 
 ## AI Provider Configuration
 
@@ -96,8 +99,6 @@ Admin can switch providers at runtime via `GET/PUT /api/admin/settings`.
 - Server with 2+ vCPU, 4GB RAM (Hetzner CX22 at ~$4/mo is enough)
 - Your own Anthropic or Gemini API key
 - GitHub OAuth app (for login)
-- Optional: Stripe account (for payments)
-
 ### GitHub OAuth Setup
 1. Go to GitHub Settings > Developer Settings > OAuth Apps
 2. Create new: Homepage URL = your domain, Callback URL = `{domain}/auth/github/callback`
@@ -133,6 +134,14 @@ draplo/
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+## Support Development
+
+Draplo is 100% free and open source. If it saved you time, consider supporting:
+
+- [Buy Me a Coffee](https://buymeacoffee.com/darko)
+- [Star on GitHub](https://github.com/DareGr/draplo)
+- [Contribute](CONTRIBUTING.md)
 
 ## License
 
