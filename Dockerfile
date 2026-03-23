@@ -87,7 +87,8 @@ RUN rm -rf node_modules tests .git .claude* docs \
     phpunit.xml vite.config.js package.json package-lock.json
 
 # Set permissions
-RUN chown -R www-data:www-data storage bootstrap/cache \
+RUN chmod +x docker/entrypoint.sh \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
