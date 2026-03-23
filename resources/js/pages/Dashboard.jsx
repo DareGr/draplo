@@ -79,8 +79,6 @@ export default function Dashboard() {
     const generatedCount = projects.filter((p) =>
         ['generated', 'exported', 'deployed'].includes(p.status)
     ).length;
-    const planLabel = user?.plan || 'free';
-
     const recentProjects = [...projects]
         .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
         .slice(0, 5);
@@ -97,15 +95,11 @@ export default function Dashboard() {
                     <StatCard icon="folder" value={totalProjects} label="Total Projects" />
                     <StatCard icon="rocket_launch" value={deployedCount} label="Deployed" />
                     <StatCard icon="smart_toy" value={generatedCount} label="Generated" />
-                    <StatCard
-                        icon="credit_card"
-                        value={
-                            <span className="inline-flex items-center px-2.5 py-0.5 bg-primary/15 text-primary rounded text-lg font-bold font-mono capitalize">
-                                {planLabel}
-                            </span>
-                        }
-                        label="Plan"
-                    />
+                    <StatCard icon="favorite" value={
+                        <span className="inline-flex items-center px-2.5 py-0.5 bg-primary/15 text-primary rounded text-lg font-bold font-mono">
+                            Open Source
+                        </span>
+                    } label="Community" />
                 </div>
 
                 {/* Recent Projects */}
