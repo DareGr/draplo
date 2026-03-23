@@ -50,7 +50,7 @@
                 <a href="/" class="text-xl font-black tracking-tighter text-white uppercase">Draplo</a>
                 <div class="hidden md:flex gap-6">
                     <a class="text-primary font-bold border-b-2 border-primary pb-1 text-sm" href="/templates">Templates</a>
-                    <a class="text-on-surface-variant hover:text-white transition-colors text-sm" href="#pricing">Pricing</a>
+                    <a class="text-on-surface-variant hover:text-white transition-colors text-sm" href="#community">Community</a>
                     <a class="text-on-surface-variant hover:text-white transition-colors text-sm" href="https://github.com/draplo/draplo" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
@@ -394,122 +394,47 @@
         {{-- ================================================================== --}}
         {{-- 6. PRICING --}}
         {{-- ================================================================== --}}
-        <section id="pricing" class="py-24 px-8 bg-surface-container-lowest">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-16">
-                    <span class="text-primary font-mono text-xs tracking-widest uppercase">Pricing</span>
-                    <h2 class="text-4xl font-extrabold text-white mt-2">Simple, transparent pricing</h2>
-                    <p class="text-on-surface-variant mt-4 max-w-xl mx-auto">Self-host for free, forever. Or use Draplo Cloud with export and deploy features.</p>
+        <section id="community" class="py-24 px-8 bg-surface-container-lowest">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="text-primary font-mono text-xs tracking-widest uppercase">Open Source</span>
+                <h2 class="text-4xl font-extrabold text-white mt-2">Completely Free. Forever.</h2>
+                <p class="text-on-surface-variant mt-4 max-w-xl mx-auto text-lg">
+                    No premium tiers. No paywalls. No limits.<br>
+                    Every feature &mdash; all 25 templates, GitHub export, BYOS deploy &mdash; is yours.
+                </p>
+
+                <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-surface-container rounded-xl p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">smart_toy</span>
+                        <h3 class="text-white font-bold mt-3">AI Generation</h3>
+                        <p class="text-on-surface-variant text-sm mt-1">All 25 templates, unlimited generations</p>
+                    </div>
+                    <div class="bg-surface-container rounded-xl p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">upload</span>
+                        <h3 class="text-white font-bold mt-3">Full Export</h3>
+                        <p class="text-on-surface-variant text-sm mt-1">GitHub push + ZIP download, no limits</p>
+                    </div>
+                    <div class="bg-surface-container rounded-xl p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">dns</span>
+                        <h3 class="text-white font-bold mt-3">BYOS Deploy</h3>
+                        <p class="text-on-surface-variant text-sm mt-1">Hetzner, DO, Linode, Vultr &mdash; your server</p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    {{-- Free --}}
-                    <div class="bg-surface-container rounded-xl p-8 border border-outline-variant/10">
-                        <h3 class="font-label text-sm uppercase tracking-widest text-on-surface-variant">Free</h3>
-                        <div class="mt-4 flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold text-white font-mono">$0</span>
-                            <span class="text-on-surface-variant text-sm">forever</span>
-                        </div>
-                        <p class="text-on-surface-variant text-sm mt-4">AI generation with preview. Perfect for exploring.</p>
-                        <ul class="mt-8 space-y-3">
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                AI scaffold generation
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                File preview
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Generic skeleton templates
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-outline text-lg">
-                                <span class="material-symbols-outlined text-outline-variant text-lg">close</span>
-                                GitHub export
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-outline text-lg">
-                                <span class="material-symbols-outlined text-outline-variant text-lg">close</span>
-                                ZIP download
-                            </li>
-                        </ul>
-                        <a href="/templates" class="mt-8 block text-center py-3 rounded-md border border-outline-variant/15 text-on-surface font-medium hover:bg-surface-container-high transition-colors">
-                            Get Started
-                        </a>
-                    </div>
-
-                    {{-- Pro --}}
-                    <div class="bg-surface-container rounded-xl p-8 border-primary/30 ring-1 ring-primary/20 border relative">
-                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-on-primary text-[10px] font-mono uppercase tracking-widest rounded-full">
-                            Most Popular
-                        </div>
-                        <h3 class="font-label text-sm uppercase tracking-widest text-primary">Pro</h3>
-                        <div class="mt-4 flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold text-white font-mono">$29</span>
-                            <span class="text-on-surface-variant text-sm">one-time</span>
-                        </div>
-                        <p class="text-on-surface-variant text-sm mt-4">Unlimited generations with full export capabilities.</p>
-                        <ul class="mt-8 space-y-3">
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Everything in Free
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Unlimited generations
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                GitHub export
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                ZIP download
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-outline text-lg">
-                                <span class="material-symbols-outlined text-outline-variant text-lg">close</span>
-                                Premium templates
-                            </li>
-                        </ul>
-                        <button disabled class="mt-8 block w-full text-center py-3 rounded-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold opacity-80 cursor-not-allowed">
-                            Unlock Export
-                        </button>
-                    </div>
-
-                    {{-- Pro+ --}}
-                    <div class="bg-surface-container rounded-xl p-8 border border-outline-variant/10">
-                        <h3 class="font-label text-sm uppercase tracking-widest text-on-surface-variant">Pro+</h3>
-                        <div class="mt-4 flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold text-white font-mono">$12</span>
-                            <span class="text-on-surface-variant text-sm">/month</span>
-                        </div>
-                        <p class="text-on-surface-variant text-sm mt-4">Premium templates and one-click BYOS deployment.</p>
-                        <ul class="mt-8 space-y-3">
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Everything in Pro
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                25 premium templates
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                BYOS deploy automation
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Hetzner, DO, Linode, Vultr
-                            </li>
-                            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                                <span class="material-symbols-outlined text-primary text-lg">check</span>
-                                Priority support
-                            </li>
-                        </ul>
-                        <button disabled class="mt-8 block w-full text-center py-3 rounded-md border border-outline-variant/15 text-on-surface font-medium opacity-80 cursor-not-allowed">
-                            Go Pro+
-                        </button>
-                    </div>
+                <p class="text-on-surface-variant mt-12 text-sm">
+                    If Draplo saves you time, consider supporting development.
+                </p>
+                <div class="mt-4 flex justify-center gap-3">
+                    <a href="{{ config('app.donate_url') }}" target="_blank" rel="noopener"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-md font-bold text-sm hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-lg">coffee</span>
+                        Buy Me a Coffee
+                    </a>
+                    <a href="{{ config('app.github_repo_url') }}" target="_blank" rel="noopener"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 border border-outline-variant/15 text-on-surface rounded-md font-medium text-sm hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        Star on GitHub
+                    </a>
                 </div>
             </div>
         </section>
@@ -541,6 +466,7 @@
                 <span class="font-mono text-xs text-outline">&copy; {{ date('Y') }} Draplo. AGPL-3.0 License.</span>
             </div>
             <nav class="flex gap-6">
+                <a href="{{ config('app.donate_url') }}" target="_blank" rel="noopener" class="font-mono text-xs text-outline hover:text-on-surface-variant transition-colors">Donate</a>
                 <a href="#" class="font-mono text-xs text-outline hover:text-on-surface-variant transition-colors">Privacy</a>
                 <a href="#" class="font-mono text-xs text-outline hover:text-on-surface-variant transition-colors">Terms</a>
                 <a href="#" class="font-mono text-xs text-outline hover:text-on-surface-variant transition-colors">Security</a>
