@@ -84,8 +84,8 @@ export default function Sidebar({ activePage, wizardProgress }) {
                         </span>
                     </div>
                     <div className="min-w-0">
-                        <p className="text-xs font-label text-primary truncate">Pro Plan</p>
-                        <p className="text-[10px] font-mono text-on-surface-variant">Architect Mode</p>
+                        <p className="text-xs font-label text-primary truncate">Open Source</p>
+                        <p className="text-[10px] font-mono text-on-surface-variant">Community Edition</p>
                     </div>
                 </div>
             </div>

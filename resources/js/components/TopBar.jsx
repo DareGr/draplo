@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 const topNavItems = [
     { label: 'Templates', to: '/templates' },
-    { label: 'Pricing', to: '/pricing' },
+    { label: 'Community', to: '/#community' },
     { label: 'Docs', to: '/docs' },
     { label: 'OS', to: '/open-source' },
 ];
