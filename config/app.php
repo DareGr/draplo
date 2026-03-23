@@ -134,12 +134,14 @@ return [
     */
 
     'flags' => [
-        'stripe' => env('STRIPE_ENABLED', true),
         'coolify' => env('COOLIFY_ENABLED', true),
         'github' => env('GITHUB_ENABLED', true),
-        'premium_templates' => env('PREMIUM_TEMPLATES_ENABLED', true),
+        'templates' => env('TEMPLATES_ENABLED', true),
         'threejs_hero' => env('THREEJS_HERO_ENABLED', true),
         'byos_hetzner' => env('BYOS_HETZNER_ENABLED', true),
     ],
+
+    'donate_url' => env('DONATE_URL', 'https://buymeacoffee.com/darko'),
+    'github_repo_url' => env('GITHUB_REPO_URL', 'https://github.com/DareGr/draplo'),
 
 ];
