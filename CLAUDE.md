@@ -10,11 +10,7 @@ Draplo (draplo.com) is an open-source platform where developers describe their S
 
 **License:** AGPL-3.0 — fully open source. Anyone can self-host for free.
 
-**Business model (Open Core):**
-- **Self-hosted:** Free forever. All features included. Clone repo, configure API keys, deploy to own server
-- **Draplo Cloud — Free:** AI generation with generic skeleton + preview. No export
-- **Draplo Cloud — Pro ($29 one-time):** Unlimited generations + GitHub export + ZIP download
-- **Draplo Cloud — Pro+ ($12/mo):** All Pro features + 25 premium industry templates + BYOS deploy automation
+**Business model:** 100% free, open source (AGPL-3.0). Community-supported via donations (Buy Me a Coffee). No premium tiers, no paywalls. All features available to all users.
 
 **Core flow:** User selects a template from library (25 templates covering 95% of SaaS ideas) → wizard opens pre-populated with template defaults → user customizes for their specific use case → AI generates scaffold = template foundation (80%) + user customizations (20%) → export to GitHub → deploy via BYOS (Bring Your Own Server)
 
@@ -38,7 +34,6 @@ Draplo does NOT host user applications. Users bring their own server (Hetzner, D
 | Auth        | Laravel Sanctum + GitHub OAuth       |
 | Git         | GitHub API (repo creation, file push)|
 | Deploy      | Coolify API (on user's server)       |
-| Payments    | Stripe (one-time + subscription)     |
 | Realtime    | Laravel Reverb (WebSocket, generation progress) |
 | Storage     | Local filesystem (generated files)   |
 | Hosting     | Hetzner VPS + Coolify (for Draplo itself) |
@@ -126,7 +121,6 @@ See `.claude-reference/decisions.md` for full rationale. Quick summary:
 - **AGPL-3.0 not MIT** — prevents fork-rebrand-sell without contributing back
 - **BYOS not managed hosting** — zero infra cost for us, zero legal liability, user owns everything
 - **Coolify not Railway/Vercel** — open source PaaS, user controls server
-- **One-time + subscription** — $29 one-time for export, $12/mo for templates + deploy
 - **GitHub OAuth only** — simplest auth, gets repo permissions, 100% of target users have it
 - **Three.js on landing** — differentiate from generic AI tool landing pages
 
@@ -137,7 +131,7 @@ See `.claude-reference/decisions.md` for full rationale. Quick summary:
 3. Subsequent deploys go through Coolify API on user's server
 4. User gets live URL in ~3 minutes
 5. User can SSH into their server at any time — full control
-6. Cancelling Draplo subscription does NOT affect running applications
+6. Cancelling or stopping Draplo does NOT affect running applications
 
 **Supported providers:**
 - Hetzner Cloud API: `https://api.hetzner.cloud/v1/`
@@ -156,33 +150,27 @@ GET  /api/v1/applications/{id}/status — Check deploy status
 
 **Security:** Server provider API keys are encrypted at rest (Laravel's `encrypt()`). Keys are decrypted only during active deploy operations. Never logged. Never exposed in UI after initial entry.
 
-## Stripe Configuration
-
-Two products:
-1. **"Draplo Pro"** — $29 one-time payment, unlocks export forever
-2. **"Draplo Pro+"** — $12/mo subscription, unlocks premium templates + BYOS deploy
-
-Middleware: `EnsureUserIsPro` checks `users.stripe_one_time_payment_at`. `EnsureUserIsProPlus` checks active Stripe subscription.
-
 ## Feature Flags
 
 ```env
-STRIPE_ENABLED=true
 COOLIFY_ENABLED=true
 GITHUB_ENABLED=true
-PREMIUM_TEMPLATES_ENABLED=true
+TEMPLATES_ENABLED=true
 BYOS_HETZNER_ENABLED=true
 BYOS_DIGITALOCEAN_ENABLED=true
 BYOS_LINODE_ENABLED=true
 BYOS_VULTR_ENABLED=true
 THREEJS_HERO_ENABLED=true
+DONATE_URL=https://buymeacoffee.com/darko
+GITHUB_REPO_URL=https://github.com/DareGr/draplo
 ```
 
-Self-hosted users can disable any feature. Disabling Stripe makes everything free. Disabling BYOS providers hides them from the deploy UI.
+Self-hosted users can disable any feature. Disabling BYOS providers hides them from the deploy UI.
 
 ## Open Source Strategy
 
-- Core platform is AGPL-3.0 — fully open source, self-hostable
-- Premium templates are stored separately, NOT in the open source repo
-- Self-hosted users get ALL features except premium templates
+- Platform is AGPL-3.0 — fully open source, self-hostable
+- All templates included in the repo
+- All features available to all users — no paywalls
+- Community-supported via donations (Buy Me a Coffee)
 - GitHub repo README serves as primary marketing to developers

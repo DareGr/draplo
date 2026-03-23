@@ -19,10 +19,8 @@ Draplo is a platform that transforms a SaaS idea description into a complete, de
 
 | Role       | Can Do                                                                   |
 |------------|--------------------------------------------------------------------------|
-| Visitor    | View landing page, start wizard, preview (blurred) generation output     |
-| Free User  | Complete wizard, see full preview of generated architecture, no export    |
-| Paid User  | Export to GitHub, download ZIP, access all generated files                |
-| Subscriber | Everything in Paid + Coolify managed hosting + custom domains            |
+| Visitor    | View landing page                                                        |
+| User       | Complete wizard, preview, export to GitHub, download ZIP, deploy (all features) |
 | Admin      | Manage users, view analytics, edit prompt templates, manage Coolify      |
 
 ## Integrations
@@ -32,7 +30,6 @@ Draplo is a platform that transforms a SaaS idea description into a complete, de
 | Anthropic API    | AI generation of project architecture      | `config/services.php`  |
 | GitHub API       | OAuth login + repo creation + file push    | `config/services.php`  |
 | Coolify API      | Managed deploy, DB provisioning, SSL       | `config/services.php`  |
-| Stripe           | One-time payment + subscription billing    | `config/services.php`  |
 | Redis            | Queue, caching, session                    | `config/database.php`  |
 
 ## User Journey (Template-First Flow)
@@ -42,31 +39,23 @@ Browse Template Library (25 templates) → Select Template
 → Wizard opens PRE-POPULATED with template defaults
 → User customizes (renames models, adds fields, adjusts roles)
 → AI generates scaffold = template foundation + user customizations
-→ Preview output → Pay/Subscribe → Export to GitHub → Clone locally
+→ Preview output → Export to GitHub → Clone locally
 → Open Claude Code → Agent has full context → Start building
 
 Optional: → Click "Deploy" → Coolify provisions → Live URL in 3 min
 ```
 
-## Pricing
+## Access Model
 
-| Plan       | Price         | Includes                                                        |
-|------------|---------------|-----------------------------------------------------------------|
-| Free       | $0            | AI generation with generic skeleton, preview all files          |
-| Pro        | $29 one-time  | GitHub export, ZIP download, unlimited generations              |
-| Pro+       | $12/mo        | All Pro features + 25 premium templates + BYOS deploy automation |
+**Access model:** All features are free for all authenticated users. No paid tiers.
 
 ## Business Rules
 
-- **Free users can generate and preview but NOT export.** Preview shows all files with full content — no blurring. Gate is on export
-- **Pro ($29 one-time) unlocks export forever.** Unlimited generations with generic skeleton
-- **Pro+ ($12/mo) adds premium templates and BYOS deploy.** Access to all 25 industry-specific templates with pre-built migrations, models, seeders. Plus automated deploy to user's own server via Coolify
 - **Template + Wizard flow:** User selects template first, wizard opens pre-populated, user customizes, AI generates. Template provides proven foundation (80%), wizard captures user-specific customization (20%)
-- **BYOS (Bring Your Own Server):** Draplo never hosts user apps. User provides their Hetzner/DO/Linode/Vultr API key, Draplo provisions and deploys to THEIR server. User owns everything. Cancelling Draplo does not affect running apps
+- **BYOS (Bring Your Own Server):** Draplo never hosts user apps. User provides their Hetzner/DO/Linode/Vultr API key, Draplo provisions and deploys to THEIR server. User owns everything. Stopping Draplo does not affect running apps
 - **Server API keys encrypted at rest.** Never logged, never exposed after initial entry
 - **Generated repos are owned by the user.** We never access, modify, or delete their GitHub repos after creation
 - **Prompt caching is mandatory.** The system prompt (~3000 tokens) must use Anthropic's prompt caching to keep API costs under $0.25 per generation
-- **Coolify resources are limited per plan.** Free hosting tier: 1 app, 1 database. Paid: up to 5 apps, 5 databases. Enforced via Coolify API resource limits
 - **Rate limiting on generation:** Max 5 generations per hour per user (prevents AI cost abuse)
 - **Static skeleton is versioned.** When we update the Laravel skeleton template, we bump a version number. Each generated project records which skeleton version it used
 
@@ -118,30 +107,26 @@ project-name/
 | Export          | Pushing generated scaffold to GitHub or downloading as ZIP               |
 | Deploy          | Provisioning the app on Coolify with database, SSL, and auto-deploy     |
 | Agent-ready     | Optimized for AI coding agents — structured docs, clear context, phased tasks |
-| Open Core       | Business model: open source core + paid cloud service                    |
 | Self-hosted     | User runs Draplo on their own server (free, AGPL-3.0)               |
-| Cloud           | Managed version at draplo.com (paid)                                 |
-| Premium prompt  | Enhanced system prompt (cloud-only) that generates richer scaffold output |
 
 ## Open Source & Licensing
 
 **License:** AGPL-3.0
 
-**Open Core model:**
+**100% free and open source:**
+- All features available to all users — no paywalls, no premium tiers
 - Platform code is fully open source — wizard, AI generation, preview, export, Coolify deploy
-- Base system prompts are in the repo (generates good quality scaffolds)
+- All templates included in the repo
 - Self-hosting is free forever with ALL features
-- Revenue comes from managed cloud version (convenience) and premium prompts (quality)
+- Community-supported via donations (Buy Me a Coffee)
 
 **Self-hosting requirements:**
 - Any server with 2+ vCPU, 4GB RAM (Hetzner CX22 at €4/mo is enough)
 - Anthropic API key (user provides their own — pays Anthropic directly)
 - GitHub OAuth app (for login)
 - Optional: second server with Coolify for user deploys
-- Optional: Stripe for payments (can be disabled for personal/team use)
 
 **Feature flags** in .env control what's enabled:
-- `STRIPE_ENABLED=false` → all features free (personal use)
 - `COOLIFY_ENABLED=false` → hide deploy feature (generate + export only)
 - `GITHUB_ENABLED=false` → ZIP download only
-- `PREMIUM_PROMPTS_ENABLED=false` → use base prompts (open source default)
+- `TEMPLATES_ENABLED=false` → hide template library

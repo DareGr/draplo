@@ -21,7 +21,7 @@
 - [ ] Laravel 12 project setup
 - [ ] Docker Compose (PostgreSQL 16, Redis)
 - [ ] Install Sanctum, Horizon, configure .env
-- [ ] Migration: `users` (name, email, password, github_id, github_token, stripe_customer_id, plan)
+- [ ] Migration: `users` (name, email, password, github_id, github_token)
 - [ ] Migration: `projects` (user_id, name, slug, description, wizard_data JSON, generation_output JSON, skeleton_version, github_repo_url, coolify_app_id, status, exported_at, deployed_at)
 - [ ] Migration: `generations` (project_id, input_hash, prompt_tokens, completion_tokens, cost_usd, model, duration_ms, created_at)
 - [ ] Model: User (with relationships, plan helpers)
@@ -98,11 +98,11 @@
 - [ ] GitHubService — create private repo, push files via GitHub API (Contents API or Git Data API)
 - [ ] Export flow: user clicks "Push to GitHub" → creates repo → pushes all files → shows repo URL
 - [ ] ZIP download alternative — generate .zip with all project files for users who don't want GitHub
-- [ ] Stripe integration — one-time payment ($29-49) to unlock export
-- [ ] Stripe webhook handler — mark user as paid on successful charge
-- [ ] Free preview gate — non-paying users see all content but "Export" button triggers payment
+- [x] ~~Stripe integration~~ — removed (free model)
+- [x] ~~Stripe webhook handler~~ — removed
+- [x] ~~Free preview gate~~ — removed
 - [ ] Post-export: show "What's next" instructions (clone, docker-compose up, claude, start building)
-- [ ] Write tests: GitHub repo creation, Stripe payment flow, ZIP generation
+- [ ] Write tests: GitHub repo creation, ZIP generation
 
 ### Phase 4 — BYOS Deploy Integration (Week 7-9)
 
@@ -127,7 +127,7 @@
 - [ ] Deploy UI: resource meters (CPU, RAM, Storage — from Coolify API)
 - [ ] Deploy UI: terminal-style build log (live_build.log component from design)
 - [ ] Deploy UI: show live URL + SSL status when complete
-- [ ] Stripe Pro+ subscription gates BYOS features
+- [x] ~~Stripe Pro+ subscription gates BYOS features~~ — removed (free model)
 - [ ] Auto-deploy webhook — new git push → Coolify redeploys
 - [ ] Write tests: provider API mocks, server provisioning, Coolify integration
 
@@ -156,7 +156,7 @@
 - [ ] "Built for speed, refined by intelligence" process section (4 steps)
 - [ ] Featured Blueprints section (6 template cards)
 - [ ] "Built for Claude & Cursor Agents" section (.claude-reference/ preview + agent chat mockup)
-- [ ] Pricing section (3 tiers matching design screen)
+- [ ] Support section (donation CTA, GitHub stars)
 - [ ] Open source section ("Fully open source. AGPL-3.0." + GitHub stars CTA)
 - [ ] Footer with links
 - [ ] Match landing page design from `.claude-ui-reference/screens/draplo_landing_page/`
@@ -166,15 +166,15 @@
 - [ ] Dashboard: recent deployments list with status badges
 - [ ] Dashboard: AI architect terminal log component (bottom of dashboard)
 - [ ] Projects list: view/deploy/manage per project
-- [ ] Account settings: plan, billing, server connections, GitHub connection
+- [ ] Account settings: server connections, GitHub connection
 - [ ] Match dashboard design from `.claude-ui-reference/screens/user_dashboard/`
 
 **Admin:**
-- [ ] Admin dashboard: user count, total generations, revenue, API costs
+- [ ] Admin dashboard: user count, total generations, API costs
 - [ ] Admin: prompt template editor (edit system prompt without redeploying)
 
 **Open Source Prep:**
-- [ ] Feature flags: all BYOS providers, STRIPE, GITHUB, PREMIUM_TEMPLATES, THREEJS_HERO
+- [ ] Feature flags: all BYOS providers, GITHUB, TEMPLATES, THREEJS_HERO
 - [ ] Conditional UI: hide features based on flags
 - [ ] README.md: comprehensive self-hosting guide
 - [ ] README.md: feature flag documentation
@@ -235,16 +235,13 @@ _None yet_
 
 ---
 
-## Revenue Targets
+## Growth Targets
 
 | Metric                | Month 1      | Month 3      | Month 6       |
 |-----------------------|--------------|--------------|---------------|
 | Registered users      | 50           | 300          | 1,000+        |
-| Pro purchases ($29)   | 10           | 40           | 150+          |
-| Pro+ subscribers ($12)| 0            | 15           | 60+           |
+| GitHub stars          | 100          | 500          | 2,000+        |
 | Templates available   | 5            | 15           | 25            |
-| One-time revenue      | $290         | $1,160       | $4,350        |
-| Subscription MRR      | $0           | $180         | $720+         |
 | API costs             | ~$5          | ~$20         | ~$75          |
 | Infrastructure costs  | ~€15/mo      | ~€25/mo      | ~€60/mo       |
 
@@ -257,10 +254,9 @@ _None yet_
 | Hetzner VPS (Draplo app)  | €5-10/mo                 | App hosting                    |
 | Anthropic API             | ~$0.15-0.25/generation   | Sonnet 4.6 with prompt caching |
 | GitHub API                | Free                     | 5000 req/hr authenticated      |
-| Stripe fees               | 2.9% + $0.30/transaction | Standard pricing               |
 | Domain (draplo.com)       | ~$12/year                |                                |
 
-**Note:** No managed Coolify server needed — BYOS model means users pay their own server costs. Our infrastructure is ONLY the Draplo platform itself.
+**Note:** No managed Coolify server needed — BYOS model means users pay their own server costs. Our infrastructure is ONLY the Draplo platform itself. Community-supported via donations.
 
 ---
 
