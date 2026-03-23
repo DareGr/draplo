@@ -4,10 +4,9 @@ it('returns feature flags', function () {
     $this->getJson('/api/config/flags')
         ->assertOk()
         ->assertJsonStructure([
-            'stripe_enabled',
             'coolify_enabled',
             'github_enabled',
-            'premium_templates_enabled',
+            'templates_enabled',
             'threejs_hero_enabled',
             'byos_hetzner_enabled',
         ]);
