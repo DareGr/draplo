@@ -27,7 +27,8 @@ RUN composer install \
     --no-interaction \
     --no-autoloader \
     --no-scripts \
-    --prefer-dist
+    --prefer-dist \
+    --ignore-platform-req=ext-pcntl
 
 COPY . .
 
