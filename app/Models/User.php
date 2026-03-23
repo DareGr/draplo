@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\UserPlanEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,9 +27,6 @@ class User extends Authenticatable
         'github_token',
         'github_username',
         'avatar_url',
-        'stripe_customer_id',
-        'plan',
-        'paid_at',
         'generation_count',
         'is_admin',
     ];
@@ -55,8 +51,6 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'plan' => UserPlanEnum::class,
-            'paid_at' => 'datetime',
             'github_token' => 'encrypted',
             'is_admin' => 'boolean',
         ];
@@ -70,20 +64,5 @@ class User extends Authenticatable
     public function serverConnections(): HasMany
     {
         return $this->hasMany(ServerConnection::class);
-    }
-
-    public function isFree(): bool
-    {
-        return $this->plan === UserPlanEnum::Free;
-    }
-
-    public function isPaid(): bool
-    {
-        return $this->plan === UserPlanEnum::Paid;
-    }
-
-    public function isSubscriber(): bool
-    {
-        return $this->plan === UserPlanEnum::Subscriber;
     }
 }

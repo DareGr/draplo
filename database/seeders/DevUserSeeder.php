@@ -15,7 +15,6 @@ class DevUserSeeder extends Seeder
                 'name' => 'Dev User',
                 'github_id' => 'dev-12345',
                 'github_username' => 'devuser',
-                'plan' => 'free',
                 'generation_count' => 0,
                 'is_admin' => true,
             ]

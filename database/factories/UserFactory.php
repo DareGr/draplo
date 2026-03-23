@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\UserPlanEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +24,6 @@ class UserFactory extends Factory
             'github_id' => (string) fake()->unique()->numberBetween(10000, 99999),
             'github_username' => fake()->userName(),
             'avatar_url' => fake()->imageUrl(200, 200),
-            'plan' => UserPlanEnum::Free,
             'generation_count' => 0,
             'is_admin' => false,
         ];
