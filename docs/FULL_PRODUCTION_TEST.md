@@ -12,14 +12,15 @@
 
 - [ ] VPS with 2+ vCPU, 4GB+ RAM (Hetzner CX22 recommended)
 - [ ] Ubuntu 22.04 or 24.04
+- [ ] Docker Engine 24+ and Docker Compose v2 installed
 - [ ] Domain `draplo.com` pointing to server IP (A record)
-- [ ] SSL certificate (via Coolify/Caddy/Certbot)
+- [ ] SSL certificate (via reverse proxy — Caddy/Traefik/Cloudflare in front of Docker)
 
-### 1.2 Application Deployment
+### 1.2 Application Deployment (Docker)
 
-- [ ] Clone repo: `git clone https://github.com/yourusername/draplo.git /var/www/draplo`
-- [ ] `cd /var/www/draplo`
-- [ ] `cp .env.example .env`
+- [ ] Clone repo: `git clone https://github.com/yourusername/draplo.git /opt/draplo`
+- [ ] `cd /opt/draplo`
+- [ ] `cp .env.production.example .env`
 - [ ] Configure `.env`:
 
 ```env
@@ -28,16 +29,23 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://draplo.com
 
+# Docker service hostnames (NOT 127.0.0.1)
 DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
+DB_HOST=postgres
 DB_PORT=5432
 DB_DATABASE=draplo
 DB_USERNAME=draplo
-DB_PASSWORD=<strong-password>
+DB_PASSWORD=<strong-random-password>
 
 CACHE_STORE=redis
 QUEUE_CONNECTION=redis
 SESSION_DRIVER=redis
+SESSION_SECURE_COOKIE=true
+SESSION_DOMAIN=draplo.com
+
+REDIS_CLIENT=predis
+REDIS_HOST=redis
+REDIS_PORT=6379
 
 AI_PROVIDER=anthropic
 AI_MODEL=claude-sonnet-4-6
@@ -48,6 +56,11 @@ GITHUB_CLIENT_ID=<your-github-client-id>
 GITHUB_CLIENT_SECRET=<your-github-client-secret>
 GITHUB_REDIRECT_URL=https://draplo.com/auth/github/callback
 
+BROADCAST_CONNECTION=reverb
+REVERB_APP_ID=draplo
+REVERB_APP_KEY=<generate-random-key>
+REVERB_APP_SECRET=<generate-random-secret>
+
 STRIPE_ENABLED=false
 COOLIFY_ENABLED=true
 GITHUB_ENABLED=true
@@ -56,16 +69,58 @@ THREEJS_HERO_ENABLED=true
 BYOS_HETZNER_ENABLED=true
 ```
 
-- [ ] `composer install --no-dev --optimize-autoloader`
-- [ ] `npm install && npm run build`
-- [ ] `php artisan key:generate`
-- [ ] `php artisan migrate --seed`
-- [ ] `php artisan config:cache`
-- [ ] `php artisan route:cache`
-- [ ] `php artisan view:cache`
-- [ ] Configure web server (nginx/Caddy) to serve from `/var/www/draplo/public`
-- [ ] Start Horizon: `php artisan horizon` (via supervisor for persistence)
-- [ ] Verify: `curl -I https://draplo.com` returns 200
+- [ ] `php artisan key:generate` (or set `APP_KEY` manually in `.env`)
+- [ ] Build and start all containers:
+  ```bash
+  docker compose -f docker-compose.prod.yml up -d --build
+  ```
+- [ ] Verify containers are running:
+  ```bash
+  docker compose -f docker-compose.prod.yml ps
+  ```
+  - [ ] `app` — running (Nginx + PHP-FPM)
+  - [ ] `worker` — running (Laravel Horizon)
+  - [ ] `reverb` — running (WebSocket server)
+  - [ ] `postgres` — running (healthy)
+  - [ ] `redis` — running (healthy)
+- [ ] Check app logs for startup errors:
+  ```bash
+  docker compose -f docker-compose.prod.yml logs app
+  ```
+  - [ ] Entrypoint ran: config cached, routes cached, views cached, migrations executed
+- [ ] Verify: `curl -I http://localhost` returns 200 (or via your SSL proxy: `curl -I https://draplo.com`)
+
+### 1.2.1 Docker Architecture
+
+| Container | Image | Purpose |
+|-----------|-------|---------|
+| `app` | Custom (Dockerfile) | Nginx + PHP 8.3-FPM — serves the Laravel app |
+| `worker` | Same image | Laravel Horizon — processes queued AI generation jobs |
+| `reverb` | Same image | Laravel Reverb — WebSocket server for real-time progress |
+| `postgres` | postgres:16-alpine | PostgreSQL database |
+| `redis` | redis:7-alpine | Cache, sessions, and queue broker |
+
+### 1.2.2 Useful Docker Commands
+
+```bash
+# View logs for a specific container
+docker compose -f docker-compose.prod.yml logs -f app
+docker compose -f docker-compose.prod.yml logs -f worker
+
+# Run artisan commands inside the app container
+docker compose -f docker-compose.prod.yml exec app php artisan migrate:status
+docker compose -f docker-compose.prod.yml exec app php artisan horizon:status
+docker compose -f docker-compose.prod.yml exec app php artisan tinker
+
+# Rebuild after code changes
+docker compose -f docker-compose.prod.yml up -d --build app worker reverb
+
+# Stop everything
+docker compose -f docker-compose.prod.yml down
+
+# Stop and delete volumes (DESTRUCTIVE — wipes database)
+docker compose -f docker-compose.prod.yml down -v
+```
 
 ### 1.3 GitHub OAuth App Setup
 
@@ -941,24 +996,27 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 ### 14.2 Three.js Flag
 
-- [ ] Set `THREEJS_HERO_ENABLED=false` in .env
-- [ ] `php artisan config:cache`
+- [ ] Set `THREEJS_HERO_ENABLED=false` in `.env`
+- [ ] Restart app to pick up changes:
+  ```bash
+  docker compose -f docker-compose.prod.yml restart app
+  ```
 - [ ] Reload landing page — gradient background instead of 3D hero
-- [ ] Set back to `true`, `php artisan config:cache` — 3D hero returns
+- [ ] Set back to `true`, restart app — 3D hero returns
 
 ### 14.3 Coolify Flag
 
-- [ ] Set `COOLIFY_ENABLED=false` in .env
-- [ ] `php artisan config:cache`
+- [ ] Set `COOLIFY_ENABLED=false` in `.env`
+- [ ] `docker compose -f docker-compose.prod.yml restart app`
 - [ ] Deploy features should be hidden from UI
-- [ ] Set back to `true`
+- [ ] Set back to `true`, restart app
 
 ### 14.4 GitHub Flag
 
-- [ ] Set `GITHUB_ENABLED=false` in .env
-- [ ] `php artisan config:cache`
+- [ ] Set `GITHUB_ENABLED=false` in `.env`
+- [ ] `docker compose -f docker-compose.prod.yml restart app`
 - [ ] GitHub export option should be hidden, only ZIP download available
-- [ ] Set back to `true`
+- [ ] Set back to `true`, restart app
 
 ---
 
@@ -980,9 +1038,9 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 ### 15.3 Encrypted Data
 
-SSH into server and verify:
+Run tinker inside the Docker container:
 ```bash
-php artisan tinker
+docker compose -f docker-compose.prod.yml exec app php artisan tinker
 # Check GitHub token is encrypted (not plaintext):
 User::first()->getRawOriginal('github_token')
 # Should show encrypted string, not a readable token
@@ -1034,13 +1092,24 @@ time curl -s https://draplo.com/api/config/flags > /dev/null
 # Should be < 100ms
 ```
 
+### 16.4 Docker Health Checks
+
+- [ ] All containers report healthy:
+  ```bash
+  docker compose -f docker-compose.prod.yml ps
+  ```
+- [ ] App health check passes: `curl -s http://localhost/up` returns 200
+- [ ] Horizon is running: `docker compose -f docker-compose.prod.yml exec app php artisan horizon:status`
+- [ ] No OOM kills: `docker compose -f docker-compose.prod.yml logs worker 2>&1 | grep -i "kill\|oom"` returns empty
+- [ ] Container restarts are 0: check RESTARTS column in `docker ps`
+
 ---
 
 ## Test Results Summary
 
 | Test Area | Checks | Pass | Fail | Notes |
 |-----------|--------|------|------|-------|
-| Server Setup | 15 | | | |
+| Server & Docker Setup | 20 | | | |
 | Landing Page | 30+ | | | |
 | Authentication | 20+ | | | |
 | Template Library | 12 | | | |
@@ -1056,8 +1125,8 @@ time curl -s https://draplo.com/api/config/flags > /dev/null
 | Project List | 10 | | | |
 | Feature Flags | 8 | | | |
 | Security | 12 | | | |
-| Performance | 8 | | | |
-| **TOTAL** | **~270** | | | |
+| Performance & Docker Health | 13 | | | |
+| **TOTAL** | **~280** | | | |
 
 ---
 

@@ -1,0 +1,50 @@
+# Dependencies (rebuilt in Docker)
+node_modules
+vendor
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment
+.env
+.env.backup
+.env.production
+
+# IDE / Editor
+.idea
+.vscode
+*.swp
+*.swo
+
+# Claude Code
+.claude
+.claude-reference
+.claude-ui-reference
+.claude-deploy
+.claude-connect
+.claude-personal
+
+# Documentation (not needed at runtime)
+docs
+*.md
+LICENSE
+CONTRIBUTING.md
+
+# Tests
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Build artifacts
+public/build
+public/hot
+
+# Storage logs (use volumes instead)
+storage/logs/*
+!storage/logs/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db

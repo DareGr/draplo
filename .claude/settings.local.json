@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -m)",
+      "Bash(php artisan:*)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(docker-compose up:*)",
+      "Bash(php:*)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(./vendor/bin/pest --init 2>&1)",
+      "Bash(git checkout:*)",
+      "Bash(chmod:*)"
+    ]
+  }
+}
