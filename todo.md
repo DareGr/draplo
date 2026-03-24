@@ -198,10 +198,13 @@
 - [x] Add min_laravel_version to template metadata
 - [x] Expose supported versions in config API
 
-### Phase 6B — Expanded AI Generation (Planned)
-- [ ] Expand system prompt to generate runnable code (models, controllers, requests, seeders)
-- [ ] Add version-specific prompt sections (Kernel vs bootstrap/app.php)
-- [ ] Update OutputParserService for new file types
+### Phase 6B — Expanded AI Generation
+- [x] Expand system prompt to generate runnable code (models, controllers, requests, seeders)
+- [x] Add version-specific prompt sections (Laravel 10 vs 11+)
+- [x] Inject Laravel version into generation prompts and cache hash
+- [x] Update OutputParserService validation for new file types
+- [x] Add file summary method to OutputParserService
+- [x] Update tests and documentation for expanded generation
 
 ### Phase 6C — Apply Scaffold Job (Planned)
 - [ ] Create ApplyScaffoldJob (assemble skeleton + AI output + dynamic composer.json)
