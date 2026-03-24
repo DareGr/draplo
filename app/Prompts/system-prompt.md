@@ -14,7 +14,7 @@ Rules:
 
 ## Required Files
 
-You MUST generate all 7 of the following files for every project.
+You MUST generate all of the following files for every project.
 
 ### 1. `CLAUDE.md` — AI Agent Context
 
@@ -86,9 +86,9 @@ Include:
 
 Always include decisions about: database choice (PostgreSQL), authentication approach, and at least one domain-specific architectural choice.
 
-## Optional Files
+## Code Files
 
-Generate these ONLY when the user has provided data models with fields.
+Generate these when the user has provided data models with fields. For most projects, these will be generated.
 
 ### 8. `database/migrations/*.php` — Migration Files
 
@@ -116,6 +116,148 @@ Rules:
 - Reference controller class names that follow the `{Model}Controller` convention.
 - Include `use` statements for all referenced controllers.
 
+### 10. `app/Models/*.php` — Eloquent Models
+
+One model file per database table (except pivot tables). Rules:
+- File name: `{ModelName}.php` in `app/Models/`
+- Extend `Illuminate\Database\Eloquent\Model`
+- Use `HasFactory` trait
+- Define `$fillable` array with all user-editable columns (NOT id, created_at, updated_at)
+- Define `$casts` array for non-string types: booleans, decimals, dates, JSON, enums
+- Define relationships: `belongsTo()`, `hasMany()`, `hasOne()`, `belongsToMany()` based on foreign keys
+- Add type hints on relationship methods (return type)
+- If multi-tenant: add a `tenant()` relationship and a `scopeTenant()` query scope
+- Do NOT add business logic to models — that belongs in services
+
+Example structure:
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Appointment extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'client_id', 'provider_id', 'service_id',
+        'starts_at', 'ends_at', 'status', 'notes',
+    ];
+
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
+    ];
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
+}
+```
+
+### 11. `app/Http/Controllers/*.php` — API Controllers
+
+One controller per model. Rules:
+- File name: `{ModelName}Controller.php` in `app/Http/Controllers/`
+- Extend `App\Http\Controllers\Controller`
+- Include standard CRUD methods: `index()`, `store()`, `show()`, `update()`, `destroy()`
+- Use Form Request classes for validation in `store()` and `update()`
+- Use route model binding for `show()`, `update()`, `destroy()`
+- Return JSON responses with appropriate status codes (200, 201, 204)
+- Use `$request->user()` for auth context, NOT `auth()->user()`
+- If multi-tenant: scope queries with `where('tenant_id', $request->user()->tenant_id)`
+- Keep controllers thin — complex logic should be in a Service class (but don't generate services yet, just use inline logic for simple CRUD)
+- Add `use` statements for all referenced classes
+
+Example structure:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\UpdateAppointmentRequest;
+use App\Models\Appointment;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class AppointmentController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        $appointments = Appointment::where('tenant_id', $request->user()->tenant_id)
+            ->with(['client', 'provider', 'service'])
+            ->latest()
+            ->paginate(20);
+
+        return response()->json($appointments);
+    }
+
+    public function store(StoreAppointmentRequest $request): JsonResponse
+    {
+        $appointment = Appointment::create([
+            ...$request->validated(),
+            'tenant_id' => $request->user()->tenant_id,
+        ]);
+
+        return response()->json($appointment, 201);
+    }
+
+    public function show(Appointment $appointment): JsonResponse
+    {
+        return response()->json($appointment->load(['client', 'provider', 'service']));
+    }
+
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment): JsonResponse
+    {
+        $appointment->update($request->validated());
+        return response()->json($appointment);
+    }
+
+    public function destroy(Appointment $appointment): JsonResponse
+    {
+        $appointment->delete();
+        return response()->json(null, 204);
+    }
+}
+```
+
+### 12. `app/Http/Requests/*.php` — Form Request Validation
+
+Two request classes per model (Store and Update). Rules:
+- File names: `Store{ModelName}Request.php` and `Update{ModelName}Request.php`
+- Extend `Illuminate\Foundation\Http\FormRequest`
+- `authorize()` returns `true` (authorization handled by middleware/policies)
+- `rules()` returns validation rules for each fillable field
+- Use appropriate Laravel validation rules: `required`, `string`, `max:255`, `integer`, `numeric`, `boolean`, `date`, `exists:table,column`, `in:value1,value2`
+- Update request should use the same rules but make fields optional (use `sometimes` instead of `required`)
+
+### 13. `database/seeders/DatabaseSeeder.php` — Demo Data Seeder
+
+A single seeder file that creates realistic demo data. Rules:
+- Use model factories if defined, otherwise use `Model::create()` directly
+- Create 2-3 records per model with realistic, domain-specific data
+- Respect foreign key relationships — create parent records first
+- If multi-tenant: create one demo tenant with all related data
+- Include a demo admin user
+- Wrap all creates in a database transaction
+
 ## Quality Rules
 
 Follow these rules strictly to produce clean, consistent output:
@@ -127,3 +269,6 @@ Follow these rules strictly to produce clean, consistent output:
 5. **Consistency:** Model names, field names, and role names must be identical across all files. If `architecture.md` says the column is `scheduled_at`, the migration must use `scheduled_at`, not `schedule_date`.
 6. **Valid PHP:** Migration files must parse and execute without syntax errors. Include the `<?php` opening tag, correct `use` statements, and proper class structure.
 7. **No Hallucinated Features:** Only include features, integrations, and models that the user explicitly described or selected. Do not invent additional functionality.
+8. **Runnable Code:** All PHP files must be syntactically valid. Models must have correct namespace and use statements. Controllers must reference existing model and request classes.
+9. **Dependency Order:** Generate models before controllers. Generate migrations before models. Respect the dependency chain.
+10. **No Stubs:** Every generated file must contain real, working code specific to the project. Do not generate empty method bodies or "// TODO" comments.
