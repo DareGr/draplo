@@ -49,7 +49,7 @@ class GenerationService
         }
 
         // Step 7: Store + track cost
-        $inputHash = hash('sha256', json_encode($project->wizard_data));
+        $inputHash = hash('sha256', json_encode($project->wizard_data) . ':v' . ($project->laravel_version ?? '12'));
         $project->update([
             'generation_output' => $files,
             'input_hash' => $inputHash,
@@ -75,10 +75,11 @@ class GenerationService
 
     private function tryCache(Project $project): bool
     {
-        $inputHash = hash('sha256', json_encode($project->wizard_data));
+        $inputHash = hash('sha256', json_encode($project->wizard_data) . ':v' . ($project->laravel_version ?? '12'));
 
         $cached = Project::where('user_id', $project->user_id)
             ->where('input_hash', $inputHash)
+            ->where('laravel_version', $project->laravel_version ?? '12')
             ->whereNotNull('generation_output')
             ->where('id', '!=', $project->id)
             ->first();
@@ -114,6 +115,14 @@ class GenerationService
     {
         $base = file_get_contents(app_path('Prompts/system-prompt.md'));
 
+        // Inject version-specific context
+        $version = $project->laravel_version ?? '12';
+        $versionContextPath = app_path("Prompts/version-context-{$version}.md");
+        $versionContext = file_exists($versionContextPath)
+            ? file_get_contents($versionContextPath)
+            : '';
+
+        // Inject template-specific context
         $templateContext = '';
         if ($project->template_slug) {
             $contextPath = storage_path("app/templates/{$project->template_slug}/prompt-context.md");
@@ -122,7 +131,9 @@ class GenerationService
             }
         }
 
-        return $base . ($templateContext ? "\n\n" . $templateContext : '');
+        return $base
+            . ($versionContext ? "\n\n" . $versionContext : '')
+            . ($templateContext ? "\n\n" . $templateContext : '');
     }
 
     public function buildUserMessage(Project $project): string
@@ -140,6 +151,7 @@ class GenerationService
         $lines[] = "Name: " . ($describe['name'] ?? 'Untitled');
         $lines[] = "Description: " . ($describe['description'] ?? '');
         $lines[] = "Problem it solves: " . ($describe['problem'] ?? '');
+        $lines[] = "Laravel Version: " . ($project->laravel_version ?? '12');
         $lines[] = '';
 
         $lines[] = "## App Type";
