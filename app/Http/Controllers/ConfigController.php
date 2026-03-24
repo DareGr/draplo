@@ -14,6 +14,8 @@ class ConfigController extends Controller
             'templates_enabled' => (bool) config('app.flags.templates', true),
             'threejs_hero_enabled' => (bool) config('app.flags.threejs_hero', true),
             'byos_hetzner_enabled' => (bool) config('app.flags.byos_hetzner', true),
+            'supported_laravel_versions' => ['10', '11', '12', '13'],
+            'default_laravel_version' => '12',
         ]);
     }
 }
