@@ -22,6 +22,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 8,
                 'tags' => ['Scheduling', 'Services'],
                 'available' => true,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Project Management Tool',
@@ -33,6 +34,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Kanban', 'Tasks'],
                 'available' => true,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Inventory & Stock Management',
@@ -44,6 +46,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 9,
                 'tags' => ['Logistics', 'Retail'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Field Service Management',
@@ -55,6 +58,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Dispatch', 'Work Orders'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Fleet & Vehicle Management',
@@ -66,6 +70,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 9,
                 'tags' => ['Vehicles', 'Logistics'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'CRM',
@@ -77,6 +82,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Pipeline', 'SaaS'],
                 'available' => true,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Invoice & Billing Platform',
@@ -88,6 +94,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Invoicing', 'Finance'],
                 'available' => true,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'E-commerce / Online Store',
@@ -99,6 +106,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 13,
                 'tags' => ['Store', 'Payments'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Subscription & Membership Platform',
@@ -110,6 +118,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Billing', 'Members'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Content Management / Blog',
@@ -121,6 +130,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 11,
                 'tags' => ['Publishing', 'SEO'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Newsletter & Email Marketing',
@@ -132,6 +142,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Email', 'Marketing'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Helpdesk & Support Tickets',
@@ -143,6 +154,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 11,
                 'tags' => ['Support', 'Tickets'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Two-Sided Marketplace',
@@ -154,6 +166,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Listings', 'Payments'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Job Board / Recruitment',
@@ -165,6 +178,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Jobs', 'Hiring'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Directory & Listing Platform',
@@ -176,6 +190,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 11,
                 'tags' => ['Listings', 'Search'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'LMS (Learning Management)',
@@ -187,6 +202,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Courses', 'Learning'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'School / Academy Management',
@@ -198,6 +214,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Students', 'Classes'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Patient / Client Records',
@@ -209,6 +226,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['EHR', 'Compliance'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Fitness & Wellness Platform',
@@ -220,6 +238,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Training', 'Health'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Restaurant & Café Management',
@@ -231,6 +250,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 11,
                 'tags' => ['Menu', 'QR Code'],
                 'available' => true,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Property / Rental Management',
@@ -242,6 +262,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Rentals', 'Booking'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Analytics / Dashboard Builder',
@@ -253,6 +274,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Charts', 'BI'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Monitoring & Alerting',
@@ -264,6 +286,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 10,
                 'tags' => ['Uptime', 'Alerts'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'Event Management Platform',
@@ -275,6 +298,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 12,
                 'tags' => ['Events', 'Tickets'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
             [
                 'name' => 'API-as-a-Service',
@@ -286,6 +310,7 @@ class TemplateSeeder extends Seeder
                 'models_count' => 11,
                 'tags' => ['Developer', 'Backend'],
                 'available' => false,
+                'min_laravel_version' => '10',
             ],
         ];
 
