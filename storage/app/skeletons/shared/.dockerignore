@@ -1,0 +1,10 @@
+node_modules
+vendor
+.git
+.env
+.env.backup
+tests
+storage/logs/*
+!storage/logs/.gitkeep
+.DS_Store
+Thumbs.db
