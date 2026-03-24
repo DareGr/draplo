@@ -20,6 +20,7 @@ class SaveWizardStepRequest extends FormRequest
 
         if ($this->input('step') === 'describe') {
             $rules['data.name'] = ['required', 'string', 'max:255'];
+            $rules['data.laravel_version'] = ['sometimes', 'string', 'in:10,11,12,13'];
         }
 
         if ($this->input('step') === 'models') {

@@ -22,6 +22,7 @@ class Project extends Model
         'name',
         'slug',
         'template_slug',
+        'laravel_version',
         'description',
         'wizard_data',
         'generation_output',

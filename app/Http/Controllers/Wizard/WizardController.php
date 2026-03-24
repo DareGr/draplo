@@ -45,6 +45,7 @@ class WizardController extends Controller
             'name' => $wizardData['step_describe']['name'] ?: 'Untitled Project',
             'slug' => Str::slug($wizardData['step_describe']['name'] ?: 'project-' . Str::random(6)),
             'template_slug' => $templateSlug,
+            'laravel_version' => $request->input('laravel_version', '12'),
             'description' => $wizardData['step_describe']['description'] ?? null,
             'wizard_data' => $wizardData,
             'status' => ProjectStatusEnum::Draft,
@@ -80,6 +81,10 @@ class WizardController extends Controller
             $project->name = $data['name'] ?? $project->name;
             $project->slug = Str::slug($data['name'] ?? $project->slug);
             $project->description = $data['description'] ?? $project->description;
+
+            if ($request->has('data.laravel_version')) {
+                $project->laravel_version = $request->input('data.laravel_version');
+            }
         }
 
         // Mark wizard as complete on review step

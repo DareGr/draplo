@@ -15,6 +15,7 @@ class CreateProjectRequest extends FormRequest
     {
         return [
             'template_slug' => ['nullable', 'string', 'max:100'],
+            'laravel_version' => ['sometimes', 'string', 'in:10,11,12,13'],
         ];
     }
 }
