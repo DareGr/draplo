@@ -190,6 +190,30 @@
 - [ ] GitHub repo: topics, description, screenshots
 - [ ] 🎉 LAUNCH
 
+### Phase 6A — Multi-Version Laravel Skeletons
+- [x] Add laravel_version column to projects table
+- [x] Add version selector to wizard Step 1
+- [x] Create base skeleton infrastructure with shared Docker + CI configs
+- [x] Add SkeletonService for version management
+- [x] Add min_laravel_version to template metadata
+- [x] Expose supported versions in config API
+
+### Phase 6B — Expanded AI Generation (Planned)
+- [ ] Expand system prompt to generate runnable code (models, controllers, requests, seeders)
+- [ ] Add version-specific prompt sections (Kernel vs bootstrap/app.php)
+- [ ] Update OutputParserService for new file types
+
+### Phase 6C — Apply Scaffold Job (Planned)
+- [ ] Create ApplyScaffoldJob (assemble skeleton + AI output + dynamic composer.json)
+- [ ] Create ComposerJsonService (dynamic package list from wizard)
+- [ ] Add "Apply" button to Preview UI
+
+### Phase 6D — Auto-Deploy Pipeline (Planned)
+- [ ] Set GitHub repo secrets via API (COOLIFY_TOKEN, COOLIFY_WEBHOOK_URL)
+- [ ] Configure Coolify webhook for auto-deploy on push
+- [ ] Auto-assign sslip.io domain
+- [ ] Custom domain configuration UI
+
 ### Post-MVP (Month 4+)
 
 **Template Rollout:**

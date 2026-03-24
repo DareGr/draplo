@@ -14,6 +14,8 @@ Draplo (draplo.com) is an open-source platform where developers describe their S
 
 **Core flow:** User selects a template from library (25 templates covering 95% of SaaS ideas) → wizard opens pre-populated with template defaults → user customizes for their specific use case → AI generates scaffold = template foundation (80%) + user customizations (20%) → export to GitHub → deploy via BYOS (Bring Your Own Server)
 
+**Laravel version support:** Users choose Laravel 10, 11, 12, or 13 in the wizard. Each version has a pre-built skeleton in `storage/app/skeletons/`. The skeleton is used as the base when assembling the final project.
+
 **Deploy model: BYOS (Bring Your Own Server)**
 Draplo does NOT host user applications. Users bring their own server (Hetzner, DigitalOcean, Linode, Vultr — any provider). Draplo automates: Coolify installation on their server, app creation, database provisioning, SSL, and deployment. The user owns their server, their code, their data. If they cancel Draplo, their app keeps running. Zero vendor lock-in.
 
